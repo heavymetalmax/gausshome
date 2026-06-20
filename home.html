@@ -30,7 +30,7 @@
     }
 
     body.phase-grid {
-      background: #f5f4f0; /* Smooth transition to premium light gray-cream when grid arrives */
+      background: #06030b; /* Maintain the deep dark Space Indigo backdrop from reference for the grid */
     }
 
     /* Animated gradient blobs in background with modern vibrant colors */
@@ -91,18 +91,15 @@
       animation: float-blob-3 7s infinite alternate ease-in-out;
     }
 
-    /* Light theme overrides for glows when grid is active */
+    /* Maintain animations and colors during grid phase */
     body.phase-grid .bg-glow-1 {
-      background: radial-gradient(circle, rgba(255, 180, 140, 0.4) 0%, rgba(255, 255, 255, 0) 70%);
-      animation-duration: 30s;
+      animation-duration: 16s;
     }
     body.phase-grid .bg-glow-2 {
-      background: radial-gradient(circle, rgba(160, 215, 190, 0.35) 0%, rgba(255, 255, 255, 0) 70%);
-      animation-duration: 35s;
+      animation-duration: 18s;
     }
     body.phase-grid .bg-glow-3 {
-      background: radial-gradient(circle, rgba(185, 175, 240, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
-      animation-duration: 28s;
+      animation-duration: 14s;
     }
 
     @keyframes float-blob-1 {
