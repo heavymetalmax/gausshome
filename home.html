@@ -473,11 +473,13 @@
     }
     .tile-support {
       grid-area: support;
-      background: rgba(30, 30, 30, 0.88); /* dark support accent tile */
+      background: linear-gradient(135deg, #0f4c81 0%, #1d3557 100%); /* modern deep cobalt/classic blue */
+      border-color: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 24px rgba(15, 76, 129, 0.2);
       color: #fff;
     }
     .tile-support .tile-logo {
-      filter: brightness(1) invert(1);
+      filter: brightness(1) invert(1); /* Ensure white logo */
     }
     .tile-buttons {
       flex: 1;
