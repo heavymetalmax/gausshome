@@ -320,31 +320,41 @@
       margin-bottom: 4px;
     }
 
-    .tile-label {
-      font-size: 26px;
+     .tile-label {
+      font-size: 20px;
       font-weight: 300;
       letter-spacing: 0.01em;
       word-break: break-word;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      gap: 2px;
+      gap: 4px;
       line-height: 1.15;
+      color: #1a1a1a; /* always dark text inside panel */
+      
+      /* Glassmorphic light semi-transparent panel */
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      padding: 10px 14px;
+      border-radius: 12px;
+      align-self: flex-start;
+      margin: 0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      max-width: 90%;
     }
 
     .tile-logo {
-      height: 32px;
+      height: 24px;
       width: auto;
       flex-shrink: 0;
       display: block;
-      filter: brightness(0); /* Black logo on light theme tiles */
+      filter: brightness(0); /* Black logo inside light panel */
     }
 
-    .tile-cooling { grid-area: cooling; color: #fff; }
-    .tile-washing { grid-area: washing; color: #fff; }
-    .tile-cooling .tile-logo, .tile-washing .tile-logo {
-      filter: brightness(1) invert(1); /* Keep logo white on dark-photo tiles */
-    }
+    .tile-cooling { grid-area: cooling; }
+    .tile-washing { grid-area: washing; }
     .tile-ai {
       grid-area: ai;
       position: relative;
@@ -467,19 +477,12 @@
       }
     }
     .tile-ai .tile-tag { color: rgba(26, 26, 26, 0.6); }
-    .tile-cooking { grid-area: cooking; color: #fff; }
-    .tile-cooking .tile-logo {
-      filter: brightness(1) invert(1);
-    }
+    .tile-cooking { grid-area: cooking; }
     .tile-support {
       grid-area: support;
       background: linear-gradient(135deg, #0f4c81 0%, #1d3557 100%); /* modern deep cobalt/classic blue */
       border-color: rgba(255, 255, 255, 0.1);
       box-shadow: 0 8px 24px rgba(15, 76, 129, 0.2);
-      color: #fff;
-    }
-    .tile-support .tile-logo {
-      filter: brightness(1) invert(1); /* Ensure white logo */
     }
     .tile-buttons {
       flex: 1;
@@ -512,10 +515,7 @@
       opacity: 1;
       transform: translateX(2px);
     }
-    .tile-more { grid-area: more; color: #fff; }
-    .tile-more .tile-logo {
-      filter: brightness(1) invert(1);
-    }
+    .tile-more { grid-area: more; }
 
     @media (max-width: 980px) {
       .home-grid {
