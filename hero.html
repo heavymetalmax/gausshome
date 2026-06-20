@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gauss — The Science of Smart Choices</title>
+  
+  <!-- Fonts: Italiana for elegant display, Plus Jakarta Sans for clean UI -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-color: #ffffff;
+      --text-main: #0e0e0e;
+      --text-muted: #555555;
+      --accent-blue: #4a6fa5;
+      --accent-gray: #eaeaea;
+      --font-ui: 'Plus Jakarta Sans', sans-serif;
+      --font-display: 'Italiana', serif;
+      --transition-base: 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: var(--font-ui);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Clean Studio Background Container */
+    #canvas-container {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 50%, #ffffff 0%, #f6f7fa 100%);
+    }
+
+    #particle-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Minimal Structural Grid lines for clean alignment */
+    .grid-overlay {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .grid-line {
+      border-right: 1px solid rgba(14, 14, 14, 0.03);
+      height: 100%;
+    }
+
+    .grid-line:last-child {
+      border-right: none;
+    }
+
+    /* Global Layout Wrapper */
+    .app-container {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 40px 60px;
+      z-index: 10;
+    }
+
+    /* Header Nav */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      z-index: 20;
+    }
+
+    .logo-group {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .logo {
+      width: 110px;
+      height: auto;
+    }
+
+    .logo path {
+      fill: var(--text-main);
+    }
+
+    .logo line {
+      stroke: var(--text-main);
+    }
+
+    .header-divider {
+      width: 1px;
+      height: 36px;
+      background-color: rgba(14, 14, 14, 0.12);
+    }
+
+    .header-tagline {
+      font-family: var(--font-display);
+      font-size: 18px;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    nav {
+      display: flex;
+      gap: 32px;
+    }
+
+    .nav-link {
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      text-decoration: none;
+      cursor: pointer;
+      position: relative;
+      padding: 4px 0;
+      transition: color 0.3s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--text-main);
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background-color: var(--text-main);
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    /* Hero Main Content Area */
+    .hero-main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      align-items: center;
+      gap: 50px;
+      margin: 30px 0;
+    }
+
+    /* Left Side: Copywriting & Actions */
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      max-width: 580px;
+    }
+
+    .category-badge {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      opacity: 0;
+      transform: translateY(15px);
+      animation: revealIn 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards 0.2s;
+    }
+
+    .tagline-large {
+      font-family: var(--font-display);
+      font-size: 58px;
+      font-weight: 400;
+      line-height: 1.15;
+      color: var(--text-main);
+      margin-bottom: 24px;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: revealIn 1s cubic-bezier(0.25, 1, 0.5, 1) forwards 0.4s;
+    }
+
+    .tagline-large span {
+      display: block;
+      font-style: italic;
+      color: var(--text-muted);
+    }
+
+    .hero-desc {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text-muted);
+      margin-bottom: 36px;
+      max-width: 480px;
+      height: 80px; /* Preserve space for content swaps */
+      opacity: 0;
+      transform: translateY(15px);
+      animation: revealIn 1s cubic-bezier(0.25, 1, 0.5, 1) forwards 0.6s;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 36px;
+      border: 1px solid var(--text-main);
+      background: transparent;
+      color: var(--text-main);
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      text-decoration: none;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      opacity: 0;
+      transform: translateY(15px);
+      animation: revealIn 1s cubic-bezier(0.25, 1, 0.5, 1) forwards 0.8s;
+      transition: color 0.4s ease, border-color 0.4s ease;
+    }
+
+    .cta-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--text-main);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+      z-index: -1;
+    }
+
+    .cta-button:hover {
+      color: #ffffff;
+    }
+
+    .cta-button:hover::before {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .cta-button svg {
+      width: 16px;
+      height: auto;
+      transition: transform 0.3s ease;
+    }
+
+    .cta-button:hover svg {
+      transform: translateX(4px);
+    }
+
+    /* Right Side: Product Showcase (Visual Prominence) */
+    .product-showcase {
+      position: relative;
+      width: 100%;
+      height: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(0.98) translateY(5px);
+      animation: revealIn 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards 0.5s;
+    }
+
+    /* Subtle backdrop ring representing "Field of precision" */
+    .product-backdrop {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      border: 1px solid rgba(14, 14, 14, 0.03);
+      border-radius: 50%;
+      z-index: 1;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .product-backdrop::before {
+      content: '';
+      position: absolute;
+      width: 320px;
+      height: 320px;
+      border: 1px dashed rgba(14, 14, 14, 0.015);
+      border-radius: 50%;
+      animation: spinSlow 60s linear infinite;
+    }
+
+    /* Product Display Frame */
+    .product-frame {
+      position: relative;
+      width: 100%;
+      height: 540px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 3;
+    }
+
+    .product-image {
+      position: absolute;
+      max-height: 540px;
+      max-width: 90%;
+      object-fit: contain;
+      opacity: 0;
+      filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.03));
+      pointer-events: none;
+      /* Slow, peaceful cross-fade instead of aggressive materialize jumps */
+      transition: opacity 1.5s ease-in-out;
+    }
+
+    /* Simple, clean fade in */
+    .product-image.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* 3D Exploded-View Assembly Styles */
+    .view-3d {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 1200px;
+      transform-style: preserve-3d;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.8s ease-in-out;
+    }
+
+    .view-3d.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .layer {
+      position: absolute;
+      object-fit: contain;
+      pointer-events: none;
+      transform-style: preserve-3d;
+      will-change: transform, opacity;
+      transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
+    }
+
+    /* Active slider adjustments for drag response */
+    .dragging .layer {
+      transition: transform 0.08s ease-out, opacity 0.08s ease-out;
+    }
+
+    /* Refrigerator Layers Sizing */
+    #view-cooling .layer-assembled {
+      max-height: 540px;
+      z-index: 10;
+    }
+
+    #view-cooling .layer-cabinet {
+      max-height: 520px;
+      z-index: 5;
+    }
+
+    #view-cooling .layer-shelves {
+      max-height: 400px;
+      z-index: 6;
+      margin-top: 15px;
+      margin-left: 20px;
+    }
+
+    #view-cooling .layer-coils {
+      max-height: 440px;
+      z-index: 2;
+    }
+
+    /* Washing Machine Layers Sizing */
+    #view-washing .layer-assembled {
+      max-height: 520px;
+      z-index: 10;
+    }
+
+    #view-washing .layer-cabinet {
+      max-height: 480px;
+      z-index: 5;
+    }
+
+    #view-washing .layer-drum {
+      max-height: 310px;
+      z-index: 6;
+      margin-top: 50px;
+    }
+
+    #view-washing .layer-motor {
+      max-height: 200px;
+      z-index: 2;
+      margin-top: 50px;
+    }
+
+    /* Explode Slider Styles */
+    .slider-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      transform: translateY(15px);
+      animation: revealIn 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards 0.95s;
+    }
+
+    .slider-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+    }
+
+    .slider-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+    }
+
+    #explode-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 180px;
+      height: 3px;
+      background: rgba(14, 14, 14, 0.08);
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    #explode-slider:hover {
+      background: rgba(14, 14, 14, 0.15);
+    }
+
+    #explode-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--text-main);
+      border: 1px solid var(--bg-color);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+      transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    #explode-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    /* Grounding Shadows: Anchors the product to prevent floating */
+    .shadow-container {
+      position: absolute;
+      bottom: 10px;
+      width: 100%;
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .ground-shadow {
+      position: absolute;
+      background: radial-gradient(ellipse at center, rgba(14, 14, 14, 0.12) 0%, rgba(14, 14, 14, 0.04) 40%, rgba(14, 14, 14, 0) 70%);
+      opacity: 0;
+      transform: scale(0.8);
+      transition: opacity var(--transition-base), transform var(--transition-base);
+    }
+
+    /* Fridge is narrow, needs a tighter shadow */
+    #shadow-cooling {
+      width: 180px;
+      height: 18px;
+    }
+
+    /* Washer is wider, needs a wider shadow */
+    #shadow-washing {
+      width: 320px;
+      height: 22px;
+    }
+
+    .ground-shadow.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* Bottom Section: Segmented Choice Controller */
+    .footer-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      z-index: 20;
+    }
+
+    /* Interactive segmented selector tabs */
+    .selector-container {
+      display: flex;
+      position: relative;
+      background: rgba(235, 235, 238, 0.7);
+      border: 1px solid rgba(14, 14, 14, 0.04);
+      border-radius: 100px;
+      padding: 5px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      width: 320px;
+      opacity: 0;
+      transform: translateY(15px);
+      animation: revealIn 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards 0.9s;
+    }
+
+    .selector-pill {
+      position: absolute;
+      top: 5px;
+      bottom: 5px;
+      left: 5px;
+      width: calc(50% - 5px);
+      background-color: var(--bg-color);
+      border-radius: 100px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.01);
+      transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+      z-index: 1;
+    }
+
+    .selector-btn {
+      flex: 1;
+      position: relative;
+      border: none;
+      background: transparent;
+      padding: 12px 0;
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+      cursor: pointer;
+      text-align: center;
+      z-index: 2;
+      transition: color 0.4s ease;
+    }
+
+    .selector-btn.active {
+      color: var(--text-main);
+    }
+
+    /* Environmental / Spec Stats indicators */
+    .stats-container {
+      display: flex;
+      gap: 48px;
+      opacity: 0;
+      transform: translateY(15px);
+      animation: revealIn 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards 1s;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .stat-val {
+      font-family: var(--font-display);
+      font-size: 20px;
+      color: var(--text-main);
+      margin-bottom: 2px;
+      transition: opacity 0.5s ease;
+    }
+
+    .stat-label {
+      font-size: 9px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--text-muted);
+    }
+
+    /* Animations */
+    @keyframes revealIn {
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes spinSlow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 992px) {
+      .app-container {
+        padding: 30px;
+      }
+      .hero-main {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        margin: 50px 0;
+        text-align: center;
+      }
+      .hero-content {
+        align-items: center;
+        max-width: 100%;
+        margin: 0 auto;
+      }
+      .hero-desc {
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .product-showcase {
+        height: 500px;
+        order: -1;
+      }
+      .product-backdrop {
+        width: 380px;
+        height: 380px;
+      }
+      .product-backdrop::before {
+        width: 240px;
+        height: 240px;
+      }
+      .product-frame {
+        height: 440px;
+      }
+      .product-image, .blueprint-svg {
+        max-height: 440px;
+      }
+      .shadow-container {
+        bottom: 5px;
+      }
+      .footer-controls {
+        flex-direction: column;
+        gap: 32px;
+        align-items: center;
+      }
+      .stats-container {
+        justify-content: center;
+        width: 100%;
+      }
+      .stat-item {
+        align-items: center;
+      }
+      .grid-overlay {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .grid-line:nth-child(3), .grid-line:nth-child(4) {
+        display: none;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .app-container {
+        padding: 20px;
+      }
+      .header-tagline {
+        display: none;
+      }
+      nav {
+        display: none;
+      }
+      .tagline-large {
+        font-size: 38px;
+      }
+      .hero-desc {
+        font-size: 14px;
+        height: auto;
+        margin-bottom: 30px;
+      }
+      .selector-container {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, ::before, ::after {
+        animation-delay: 0s !important;
+        animation-duration: 0s !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0s !important;
+        scroll-behavior: auto !important;
+      }
+      #particle-canvas {
+        display: none;
+      }
+      .blueprint-svg {
+        display: none !important;
+      }
+      .product-image {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- WebGL/Canvas Background -->
+  <div id="canvas-container">
+    <canvas id="particle-canvas"></canvas>
+  </div>
+
+  <!-- Minimal Structural Grid lines for aesthetic alignment -->
+  <div class="grid-overlay">
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+  </div>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header>
+      <div class="logo-group">
+        <!-- GAUSS SVG Logo -->
+        <svg class="logo" viewBox="0 0 284 221" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M28.5 157.25C23.875 157.25 19.7083 156.104 16 153.812C12.25 151.521 9.22917 148.438 6.9375 144.562C4.6875 140.688 3.5625 136.354 3.5625 131.562V91C3.5625 86.3333 4.70833 82.0833 7 78.25C9.25 74.375 12.2708 71.2917 16.0625 69C19.8542 66.6667 24 65.5 28.5 65.5C33.2083 65.5 37.4583 66.625 41.25 68.875C45.0417 71.1667 48.0417 74.2292 50.25 78.0625C52.5 81.8958 53.625 86.2083 53.625 91V96.875C53.625 97.2083 53.4167 97.375 53 97.375H38.625C38.2917 97.375 38.125 97.2083 38.125 96.875V92C38.125 88.75 37.2083 86.0625 35.375 83.9375C33.5417 81.8125 31.25 80.75 28.5 80.75C26.0417 80.75 23.8542 81.7708 21.9375 83.8125C20.0208 85.8542 19.0625 88.25 19.0625 91V131.562C19.0625 134.354 20 136.771 21.875 138.812C23.75 140.812 25.9583 141.812 28.5 141.812C31.25 141.812 33.5417 140.833 35.375 138.875C37.2083 136.875 38.125 134.438 38.125 131.562V125.25H29.1875C28.7292 125.25 28.5 125.042 28.5 124.625V110.312C28.5 109.896 28.7292 109.688 29.1875 109.688H53.125C53.4583 109.688 53.625 109.896 53.625 110.312V131.562C53.625 136.354 52.5 140.688 50.25 144.562C47.9583 148.438 44.9375 151.521 41.1875 153.812C37.4375 156.104 33.2083 157.25 28.5 157.25ZM138.375 157.25C133.875 157.25 129.708 156.083 125.875 153.75C122.042 151.417 118.979 148.292 116.688 144.375C114.438 140.417 113.312 136.104 113.312 131.438L113.562 67.4375C113.562 67.1042 113.729 66.9375 114.062 66.9375H128.438C128.771 66.9375 128.938 67.1042 128.938 67.4375V131.438C128.938 134.312 129.854 136.771 131.688 138.812C133.521 140.812 135.75 141.812 138.375 141.812C141.125 141.812 143.417 140.812 145.25 138.812C147.083 136.771 148 134.312 148 131.438V67.4375C148 67.1042 148.167 66.9375 148.5 66.9375H162.875C163.208 66.9375 163.375 67.1042 163.375 67.4375L163.625 131.438C163.625 136.146 162.5 140.479 160.25 144.438C157.958 148.354 154.917 151.479 151.125 153.812C147.333 156.104 143.083 157.25 138.375 157.25ZM195.438 157.25C190.896 157.25 186.708 156.083 182.875 153.75C179.083 151.417 176.042 148.312 173.75 144.438C171.5 140.521 170.375 136.229 170.375 131.562V125.688C170.375 125.229 170.583 125 171 125H185.375C185.708 125 185.875 125.229 185.875 125.688V131.562C185.875 134.354 186.812 136.771 188.688 138.812C190.562 140.812 192.812 141.812 195.438 141.812C198.104 141.812 200.375 140.792 202.25 138.75C204.125 136.667 205.062 134.271 205.062 131.562C205.062 128.438 203.021 125.708 198.938 123.375C198.271 122.958 197.396 122.458 196.312 121.875C195.271 121.25 194.021 120.542 192.562 119.75C191.104 118.958 189.688 118.188 188.312 117.438C186.938 116.646 185.604 115.896 184.312 115.188C179.646 112.438 176.167 109 173.875 104.875C171.625 100.708 170.5 96.0417 170.5 90.875C170.5 86.125 171.667 81.8333 174 78C176.333 74.2083 179.375 71.2083 183.125 69C186.917 66.75 191.021 65.625 195.438 65.625C199.979 65.625 204.146 66.75 207.938 69C211.729 71.2917 214.75 74.3333 217 78.125C219.292 81.9167 220.438 86.1667 220.438 90.875V101.375C220.438 101.708 220.271 101.875 219.938 101.875H205.562C205.229 101.875 205.062 101.708 205.062 101.375L204.938 90.875C204.938 87.875 204 85.4375 202.125 83.5625C200.25 81.6875 198.021 80.75 195.438 80.75C192.812 80.75 190.562 81.75 188.688 83.75C186.812 85.75 185.875 88.125 185.875 90.875C185.875 93.6667 186.458 96 187.625 97.875C188.833 99.75 191.021 101.542 194.188 103.25C194.521 103.417 195.292 103.833 196.5 104.5C197.708 105.167 199.042 105.917 200.5 106.75C202 107.542 203.354 108.271 204.562 108.938C205.771 109.562 206.5 109.938 206.75 110.062C211 112.438 214.354 115.354 216.812 118.812C219.312 122.271 220.562 126.521 220.562 131.562C220.562 136.438 219.438 140.812 217.188 144.688C214.896 148.562 211.854 151.625 208.062 153.875C204.271 156.125 200.062 157.25 195.438 157.25ZM251.188 157.25C246.646 157.25 242.458 156.083 238.625 153.75C234.833 151.417 231.792 148.312 229.5 144.438C227.25 140.521 226.125 136.229 226.125 131.562V125.688C226.125 125.229 226.333 125 226.75 125H241.125C241.458 125 241.625 125.229 241.625 125.688V131.562C241.625 134.354 242.562 136.771 244.438 138.812C246.312 140.812 248.562 141.812 251.188 141.812C253.854 141.812 256.125 140.792 258 138.75C259.875 136.667 260.812 134.271 260.812 131.562C260.812 128.438 258.771 125.708 254.688 123.375C254.021 122.958 253.146 122.458 252.062 121.875C251.021 121.25 249.771 120.542 248.312 119.75C246.854 118.958 245.438 118.188 244.062 117.438C242.688 116.646 241.354 115.896 240.062 115.188C235.396 112.438 231.917 109 229.625 104.875C227.375 100.708 226.25 96.0417 226.25 90.875C226.25 86.125 227.417 81.8333 229.75 78C232.083 74.2083 235.125 71.2083 238.875 69C242.667 66.75 246.771 65.625 251.188 65.625C255.729 65.625 259.896 66.75 263.688 69C267.479 71.2917 270.5 74.3333 272.75 78.125C275.042 81.9167 276.188 86.1667 276.188 90.875V101.375C276.188 101.708 276.021 101.875 275.688 101.875H261.312C260.979 101.875 260.812 101.708 260.812 101.375L260.688 90.875C260.688 87.875 259.75 85.4375 257.875 83.5625C256 81.6875 253.771 80.75 251.188 80.75C248.562 80.75 246.312 81.75 244.438 83.75C242.562 85.75 241.625 88.125 241.625 90.875C241.625 93.6667 242.208 96 243.375 97.875C244.583 99.75 246.771 101.542 249.938 103.25C250.271 103.417 251.042 103.833 252.25 104.5C253.458 105.167 254.792 105.917 256.25 106.75C257.75 107.542 259.104 108.271 260.312 108.938C261.521 109.562 262.25 109.938 262.5 110.062C266.75 112.438 270.104 115.354 272.562 118.812C275.062 122.271 276.312 126.521 276.312 131.562C276.312 136.438 275.188 140.812 272.938 144.688C270.646 148.562 267.604 151.625 263.812 153.875C260.021 156.125 255.812 157.25 251.188 157.25ZM83.375 63.75C87.875 63.75 92.0417 64.9167 95.875 67.25C99.7083 69.5833 102.771 72.7083 105.063 76.625C107.313 80.5833 108.438 84.8958 108.438 89.5625L108.188 153.562C108.188 153.896 108.021 154.062 107.688 154.062H93.3125C92.9792 154.062 92.8125 153.896 92.8125 153.562L92.8125 89.5625C92.8125 86.6875 91.8958 84.2292 90.0625 82.1875C88.2292 80.1875 86 79.1875 83.375 79.1875C80.625 79.1875 78.3333 80.1875 76.5 82.1875C74.6667 84.2292 73.75 86.6875 73.75 89.5625L73.75 153.562C73.75 153.896 73.5833 154.062 73.25 154.062H58.875C58.5417 154.062 58.375 153.896 58.375 153.562L58.125 89.5625C58.125 84.8542 59.25 80.5208 61.5 76.5625C63.7917 72.6458 66.8333 69.5208 70.625 67.1875C74.4167 64.8958 78.6667 63.75 83.375 63.75Z"/>
+          <line x1="73" y1="115.5" x2="100.136" y2="115.5" stroke-width="15"/>
+        </svg>
+        <div class="header-divider"></div>
+        <span class="header-tagline">The Science of Smart Choices</span>
+      </div>
+      <nav>
+        <a class="nav-link" href="#cooling" onclick="switchState('cooling'); return false;">Cooling</a>
+        <a class="nav-link" href="#washing" onclick="switchState('washing'); return false;">Washing</a>
+        <a class="nav-link" href="#">Philosophy</a>
+        <a class="nav-link" href="#">Support</a>
+      </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="hero-main">
+      <!-- Left Column: Copywriting -->
+      <div class="hero-content">
+        <span class="category-badge" id="category-badge">Cooling Technologies</span>
+        <h1 class="tagline-large" id="tagline-main">
+          The Science of
+          <span id="tagline-highlight">Smart Choices</span>
+        </h1>
+        <p class="hero-desc" id="hero-desc">
+          Sensing environmental changes with micro-precision. Quiet cooling systems engineered for sustained freshness, optimal preservation, and passive energy conservation.
+        </p>
+        <a href="#" class="cta-button">
+          Explore Technology
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Right Column: Product Showcase -->
+      <div class="product-showcase">
+        <div class="product-backdrop"></div>
+        <div class="product-frame" id="explode-container">
+          
+          <!-- Refrigerator 3D View -->
+          <div class="view-3d active" id="view-cooling">
+            <img src="assets/ref-coils.png" class="layer layer-coils" alt="Condenser Coils">
+            <img src="assets/ref-cabinet.png" class="layer layer-cabinet" alt="Cabinet Body">
+            <img src="assets/ref-shelves.png" class="layer layer-shelves" alt="Shelves & Drawers">
+            <img src="assets/TF.png" class="layer layer-assembled" alt="Gauss Refrigerator">
+          </div>
+
+          <!-- Washing Machine 3D View -->
+          <div class="view-3d" id="view-washing">
+            <img src="assets/wm-motor.png" class="layer layer-motor" alt="Direct Drive Motor">
+            <img src="assets/wm-cabinet.png" class="layer layer-cabinet" alt="Cabinet Body">
+            <img src="assets/wm-drum.png" class="layer layer-drum" alt="Stainless Steel Drum">
+            <img src="assets/WM.png" class="layer layer-assembled" alt="Gauss Washing Machine">
+          </div>
+
+        </div>
+
+        <!-- Real Grounding Shadows to Anchor Appliances -->
+        <div class="shadow-container">
+          <div class="ground-shadow active" id="shadow-cooling"></div>
+          <div class="ground-shadow" id="shadow-washing"></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer Controls -->
+    <div class="footer-controls">
+      <!-- Interactive Segmented Selector -->
+      <div class="selector-container">
+        <div class="selector-pill" id="selector-pill"></div>
+        <button class="selector-btn active" id="btn-cooling" onclick="switchState('cooling')">Cooling</button>
+        <button class="selector-btn" id="btn-washing" onclick="switchState('washing')">Washing</button>
+      </div>
+
+      <!-- Explode Slider -->
+      <div class="slider-group">
+        <label for="explode-slider" class="slider-label">Exploded View</label>
+        <div class="slider-wrapper">
+          <span>Assemble</span>
+          <input type="range" id="explode-slider" min="0" max="1" step="0.001" value="0">
+          <span>Inspect</span>
+        </div>
+      </div>
+
+      <!-- Specs/Stats changing in sync with states -->
+      <div class="stats-container">
+        <div class="stat-item">
+          <span class="stat-val" id="stat-primary">34 dB</span>
+          <span class="stat-label" id="label-primary">Quiet Operation</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-val" id="stat-secondary">A+++</span>
+          <span class="stat-label" id="label-secondary">Energy Grade</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Precision Net Background (Canvas 2D) -->
+  <script>
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    const particles = [];
+    const particleCount = 75;
+
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+
+      reset() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.size = Math.random() * 2 + 0.8; // 0.8px to 2.8px dots
+        
+        // Base random velocities - very slow
+        this.vx = Math.random() * 0.25 - 0.125;
+        this.vy = Math.random() * 0.25 - 0.125;
+        
+        // Variables for organic wave motions
+        this.angle = Math.random() * Math.PI * 2;
+        this.angleSpeed = Math.random() * 0.01 - 0.005;
+      }
+
+      update(state) {
+        let targetVx = 0;
+        let targetVy = 0;
+
+        if (state < 0.5) {
+          // Cooling behavior: gentle horizontal breeze moving left
+          const coolingStrength = 1.0 - (state * 2.0); // 1.0 down to 0.0
+          targetVx = -0.3 * coolingStrength;
+          targetVy = Math.sin(this.angle) * 0.08 * coolingStrength;
+          this.angle += this.angleSpeed;
+        } else {
+          // Washing behavior: gentle circular vortex centered near product frame
+          const washingStrength = (state - 0.5) * 2.0; // 0.0 up to 1.0
+          const centerX = width * 0.72; // centered near the product showcase column
+          const centerY = height * 0.5;
+          const dx = this.x - centerX;
+          const dy = this.y - centerY;
+          const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+          
+          // Tangent vector for circular rotation
+          targetVx = (-dy / dist) * 0.4 * washingStrength;
+          targetVy = (dx / dist) * 0.4 * washingStrength;
+        }
+
+        // Smoothly interpolate velocity
+        this.vx += (targetVx - this.vx) * 0.02;
+        this.vy += (targetVy - this.vy) * 0.02;
+
+        // Apply friction
+        this.vx *= 0.99;
+        this.vy *= 0.99;
+
+        this.x += this.vx;
+        this.y += this.vy;
+
+        // Wraparound boundaries
+        if (this.x < -10) this.x = width + 10;
+        if (this.x > width + 10) this.x = -10;
+        if (this.y < -10) this.y = height + 10;
+        if (this.y > height + 10) this.y = -10;
+      }
+
+      draw(color) {
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Initialize particles
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
+    }
+
+    let currentAnimState = 0.0;
+    let targetAnimState = 0.0;
+
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+
+      // Lerp active state
+      currentAnimState += (targetAnimState - currentAnimState) * 0.04;
+
+      // Dynamic color interpolation
+      // Cooling: soft blue/cyan (74, 111, 165)
+      // Washing: soft indigo/purple (99, 102, 241)
+      const r = Math.round(mix(74, 99, currentAnimState));
+      const g = Math.round(mix(111, 102, currentAnimState));
+      const b = Math.round(mix(165, 241, currentAnimState));
+      
+      const particleColor = `rgba(${r}, ${g}, ${b}, 0.12)`;
+      const lineColor = `rgba(${r}, ${g}, ${b}, 0.03)`;
+
+      // Update and draw particles
+      particles.forEach(p => {
+        p.update(currentAnimState);
+        p.draw(particleColor);
+      });
+
+      // Draw connection lines
+      for (let i = 0; i < particleCount; i++) {
+        for (let j = i + 1; j < particleCount; j++) {
+          const p1 = particles[i];
+          const p2 = particles[j];
+          const dx = p1.x - p2.x;
+          const dy = p1.y - p2.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < 140) {
+            // Draw faint network lines
+            ctx.strokeStyle = lineColor;
+            ctx.lineWidth = 0.5 * (1.0 - dist / 140);
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    function mix(start, end, amt) {
+      return start + (end - start) * amt;
+    }
+
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      draw();
+    }
+  </script>
+
+  <!-- Content State Management & Interactivity -->
+  <script>
+    // Copywriting content databases for seamless swaps
+    const contentData = {
+      cooling: {
+        badge: "Cooling Technologies",
+        titleHtml: "The Science of <span id='tagline-highlight'>Smart Choices</span>",
+        desc: "Sensing environmental changes with micro-precision. Quiet cooling systems engineered for sustained freshness, optimal preservation, and passive energy conservation.",
+        statPrimary: "34 dB",
+        statSecondary: "A+++",
+        labelPrimary: "Quiet Operation",
+        labelSecondary: "Energy Grade"
+      },
+      washing: {
+        badge: "Fabric Care Systems",
+        titleHtml: "The Physics of <span id='tagline-highlight'>Sensing Care</span>",
+        desc: "Intelligent water and friction calibration. Dynamic drum motion sensing fabric density and weight to preserve texture while minimizing consumption silently.",
+        statPrimary: "48 dB",
+        statSecondary: "1400 rpm",
+        labelPrimary: "Spin Silence",
+        labelSecondary: "Max Spin Velocity"
+      }
+    };
+
+    let activeState = 'cooling';
+    let isTransitioning = false;
+
+    const slider = document.getElementById('explode-slider');
+    const container = document.getElementById('explode-container');
+
+    // Clamp function helper
+    const clamp = (val, min, max) => Math.max(min, Math.min(max, val));
+
+    function updateExplode(factor) {
+      // Refrigerator Layers
+      const refAssembled = document.querySelector('#view-cooling .layer-assembled');
+      const refShelves = document.querySelector('#view-cooling .layer-shelves');
+      const refCabinet = document.querySelector('#view-cooling .layer-cabinet');
+      const refCoils = document.querySelector('#view-cooling .layer-coils');
+
+      // Washing Machine Layers
+      const wmAssembled = document.querySelector('#view-washing .layer-assembled');
+      const wmDrum = document.querySelector('#view-washing .layer-drum');
+      const wmCabinet = document.querySelector('#view-washing .layer-cabinet');
+      const wmMotor = document.querySelector('#view-washing .layer-motor');
+
+      // 1. Refrigerator Transformations
+      if (refAssembled && refShelves && refCabinet && refCoils) {
+        refAssembled.style.opacity = clamp(1.0 - factor * 4.0, 0.0, 1.0);
+        
+        const partsOpacity = clamp(factor * 2.0, 0.0, 1.0);
+        refShelves.style.opacity = partsOpacity;
+        refCabinet.style.opacity = partsOpacity;
+        refCoils.style.opacity = partsOpacity;
+
+        refShelves.style.transform = `translate3d(${factor * 30}px, 0, ${factor * 80}px) rotateY(${factor * -20}deg)`;
+        refCabinet.style.transform = `translate3d(0, 0, ${factor * -40}px) rotateY(${factor * -15}deg)`;
+        refCoils.style.transform = `translate3d(${factor * -40}px, 0, ${factor * -180}px) rotateY(${factor * -10}deg)`;
+      }
+
+      // 2. Washing Machine Transformations
+      if (wmAssembled && wmDrum && wmCabinet && wmMotor) {
+        wmAssembled.style.opacity = clamp(1.0 - factor * 4.0, 0.0, 1.0);
+        
+        const partsOpacity = clamp(factor * 2.0, 0.0, 1.0);
+        wmDrum.style.opacity = partsOpacity;
+        wmCabinet.style.opacity = partsOpacity;
+        wmMotor.style.opacity = partsOpacity;
+
+        wmDrum.style.transform = `translate3d(${factor * 40}px, 0, ${factor * 110}px) rotateY(${factor * -15}deg) rotateZ(${factor * 45}deg)`;
+        wmCabinet.style.transform = `translate3d(0, 0, ${factor * -30}px) rotateY(${factor * -15}deg)`;
+        wmMotor.style.transform = `translate3d(${factor * -30}px, 0, ${factor * -160}px) rotateY(${factor * -10}deg)`;
+      }
+    }
+
+    // Input events for range slider
+    slider.addEventListener('input', (e) => {
+      updateExplode(parseFloat(e.target.value));
+    });
+
+    slider.addEventListener('mousedown', () => {
+      container.classList.add('dragging');
+    });
+
+    slider.addEventListener('mouseup', () => {
+      container.classList.remove('dragging');
+    });
+
+    slider.addEventListener('touchstart', () => {
+      container.classList.add('dragging');
+    });
+
+    slider.addEventListener('touchend', () => {
+      container.classList.remove('dragging');
+    });
+
+    let animationFrameId = null;
+
+    function animateSlider(from, to, duration) {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+      
+      const startTime = performance.now();
+      
+      function tick(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1.0);
+        
+        const ease = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+        const val = from + (to - from) * ease;
+        
+        slider.value = val;
+        updateExplode(val);
+        
+        if (progress < 1.0) {
+          animationFrameId = requestAnimationFrame(tick);
+        } else {
+          animationFrameId = null;
+        }
+      }
+      
+      animationFrameId = requestAnimationFrame(tick);
+    }
+
+    // First Impression: Auto-assemble Refrigerator on initial load
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        slider.value = 0;
+        updateExplode(0);
+        return;
+      }
+
+      // Start fully exploded
+      slider.value = 1.0;
+      updateExplode(1.0);
+
+      // Smoothly assemble after a short delay
+      setTimeout(() => {
+        animateSlider(1.0, 0.0, 2400); // 2.4s calm assembly
+      }, 600);
+    });
+
+    function switchState(state) {
+      if (state === activeState || isTransitioning) return;
+      activeState = state;
+      isTransitioning = true;
+
+      // Update WebGL particle target state
+      targetAnimState = state === 'cooling' ? 0.0 : 1.0;
+
+      // Update Segmented Pill position
+      const pill = document.getElementById('selector-pill');
+      if (state === 'cooling') {
+        pill.style.transform = 'translateX(0)';
+        document.getElementById('btn-cooling').classList.add('active');
+        document.getElementById('btn-washing').classList.remove('active');
+        document.getElementById('shadow-cooling').classList.add('active');
+        document.getElementById('shadow-washing').classList.remove('active');
+      } else {
+        pill.style.transform = 'translateX(100%)';
+        document.getElementById('btn-cooling').classList.remove('active');
+        document.getElementById('btn-washing').classList.add('active');
+        document.getElementById('shadow-cooling').classList.remove('active');
+        document.getElementById('shadow-washing').classList.add('active');
+      }
+
+      // 1. Cross-fade between 3D view states
+      const oldView = document.querySelector('.view-3d.active');
+      const newView = document.getElementById(`view-${state}`);
+      
+      if (oldView) oldView.classList.remove('active');
+      newView.classList.add('active');
+
+      // 2. Set new view to fully exploded instantly
+      slider.value = 1.0;
+      updateExplode(1.0);
+
+      // 3. Update copywriting text elements with a smooth fade-out / fade-in
+      const elementsToFade = [
+        document.getElementById('category-badge'),
+        document.getElementById('tagline-main'),
+        document.getElementById('hero-desc'),
+        document.getElementById('stat-primary'),
+        document.getElementById('stat-secondary'),
+        document.getElementById('label-primary'),
+        document.getElementById('label-secondary')
+      ];
+
+      elementsToFade.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(8px)';
+        el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+      });
+
+      // Swap contents mid-transition
+      setTimeout(() => {
+        const data = contentData[state];
+        
+        document.getElementById('category-badge').textContent = data.badge;
+        document.getElementById('tagline-main').innerHTML = data.titleHtml;
+        document.getElementById('hero-desc').textContent = data.desc;
+        
+        document.getElementById('stat-primary').textContent = data.statPrimary;
+        document.getElementById('stat-secondary').textContent = data.statSecondary;
+        document.getElementById('label-primary').textContent = data.labelPrimary;
+        document.getElementById('label-secondary').textContent = data.labelSecondary;
+
+        elementsToFade.forEach(el => {
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+        });
+      }, 400);
+
+      // 4. Smoothly assemble the new product
+      setTimeout(() => {
+        animateSlider(1.0, 0.0, 2400);
+        setTimeout(() => {
+          isTransitioning = false; // unlock interaction after assembly
+        }, 2400);
+      }, 400);
+    }
+  </script>
+</body>
+</html>

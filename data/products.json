@@ -1,0 +1,18 @@
+{
+  "categories": [
+    { "id": "cooling", "label": "Cooling" },
+    { "id": "washing", "label": "Washing" },
+    { "id": "cooking", "label": "Cooking" },
+    { "id": "more", "label": "More" }
+  ],
+  "products": [
+    {
+      "id": "nwcn180w",
+      "model": "NWCN180W",
+      "category": "cooling",
+      "photo": "assets/TF.png",
+      "specs": ["No Frost", "H180", "W55", "D56", "253L", "E class"],
+      "retailers": []
+    }
+  ]
+}

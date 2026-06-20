@@ -1,0 +1,14 @@
+{
+  "id": "session-1781854861466",
+  "startedAt": "2026-06-19T07:41:01.466Z",
+  "cwd": "/Users/max/Library/Mobile Documents/com~apple~CloudDocs/Projects/Gausshome/Marketing/web",
+  "context": {},
+  "metrics": {
+    "edits": 9,
+    "commands": 0,
+    "tasks": 0,
+    "errors": 0
+  },
+  "endedAt": "2026-06-19T08:10:52.437Z",
+  "duration": 1790973
+}
