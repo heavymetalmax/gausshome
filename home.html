@@ -23,12 +23,17 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: #f5f4f0; /* ultra clean premium light gray-cream */
+      background: #0d0f12; /* Deep modern dark tech base during splash */
       overflow: hidden;
       font-family: 'Inter', sans-serif;
+      transition: background 0.8s cubic-bezier(0.25, 1, 0.5, 1);
     }
 
-    /* Animated gradient blobs in background with modern, premium pastel colors */
+    body.phase-grid {
+      background: #f5f4f0; /* Smooth transition to premium light gray-cream when grid arrives */
+    }
+
+    /* Animated gradient blobs in background with modern vibrant colors */
     .bg-glows {
       position: absolute;
       inset: 0;
@@ -42,56 +47,78 @@
     .bg-glow-1, .bg-glow-2, .bg-glow-3 {
       position: absolute;
       border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.8;
+      transition: opacity 0.8s ease, filter 0.8s ease;
+    }
+
+    body.phase-grid .bg-glow-1,
+    body.phase-grid .bg-glow-2,
+    body.phase-grid .bg-glow-3 {
       filter: blur(120px);
       opacity: 0.5;
     }
 
-    /* Soft Apricot/Peach */
+    /* Vibrant Cyber Pink / Purple */
     .bg-glow-1 {
       top: -10%;
       left: 10%;
+      width: 55vw;
+      height: 55vw;
+      background: radial-gradient(circle, rgba(255, 0, 128, 0.55) 0%, rgba(255, 255, 255, 0) 70%);
+      animation: float-blob-1 12s infinite alternate ease-in-out; /* Much faster, playful speed */
+    }
+
+    /* Vibrant Electric Cyan / Teal */
+    .bg-glow-2 {
+      bottom: -15%;
+      right: -5%;
+      width: 65vw;
+      height: 65vw;
+      background: radial-gradient(circle, rgba(0, 240, 255, 0.5) 0%, rgba(255, 255, 255, 0) 70%);
+      animation: float-blob-2 14s infinite alternate ease-in-out;
+    }
+
+    /* Vibrant Acid Green / Bright Lime */
+    .bg-glow-3 {
+      top: 30%;
+      right: 25%;
       width: 50vw;
       height: 50vw;
+      background: radial-gradient(circle, rgba(175, 255, 42, 0.45) 0%, rgba(255, 255, 255, 0) 70%);
+      animation: float-blob-3 10s infinite alternate ease-in-out;
+    }
+
+    /* Light theme overrides for glows when grid is active */
+    body.phase-grid .bg-glow-1 {
       background: radial-gradient(circle, rgba(255, 180, 140, 0.4) 0%, rgba(255, 255, 255, 0) 70%);
-      animation: float-blob-1 30s infinite alternate ease-in-out;
+      animation-duration: 30s;
     }
-
-    /* Modern Soft Sage / Mint Minty green */
-    .bg-glow-2 {
-      bottom: -10%;
-      right: 5%;
-      width: 60vw;
-      height: 60vw;
+    body.phase-grid .bg-glow-2 {
       background: radial-gradient(circle, rgba(160, 215, 190, 0.35) 0%, rgba(255, 255, 255, 0) 70%);
-      animation: float-blob-2 35s infinite alternate ease-in-out;
+      animation-duration: 35s;
     }
-
-    /* Soft Lavender/Periwinkle blue */
-    .bg-glow-3 {
-      top: 40%;
-      right: 30%;
-      width: 45vw;
-      height: 45vw;
+    body.phase-grid .bg-glow-3 {
       background: radial-gradient(circle, rgba(185, 175, 240, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
-      animation: float-blob-3 28s infinite alternate ease-in-out;
+      animation-duration: 28s;
     }
 
     @keyframes float-blob-1 {
-      0% { transform: translate(0, 0) scale(1); }
-      50% { transform: translate(10vw, 5vh) scale(1.1); }
-      100% { transform: translate(-5vw, 15vh) scale(0.9); }
+      0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+      50% { transform: translate(12vw, 8vh) scale(1.2) rotate(180deg); }
+      100% { transform: translate(-8vw, 20vh) scale(0.85) rotate(360deg); }
     }
 
     @keyframes float-blob-2 {
-      0% { transform: translate(0, 0) scale(1); }
-      50% { transform: translate(-8vw, -12vh) scale(1.15); }
-      100% { transform: translate(6vw, -5vh) scale(0.95); }
+      0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+      50% { transform: translate(-10vw, -15vh) scale(1.25) rotate(-180deg); }
+      100% { transform: translate(8vw, -8vh) scale(0.9) rotate(-360deg); }
     }
 
     @keyframes float-blob-3 {
-      0% { transform: translate(0, 0) scale(1); }
-      50% { transform: translate(-12vw, 10vh) scale(0.9); }
-      100% { transform: translate(8vw, -8vh) scale(1.1); }
+      0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+      50% { transform: translate(-15vw, 12vh) scale(0.8) rotate(120deg); }
+      100% { transform: translate(10vw, -12vh) scale(1.15) rotate(240deg); }
     }
 
     .logo-lockup {
@@ -112,12 +139,12 @@
     }
 
     .logo-path {
-      fill: #1a1a1a;
+      fill: #ffffff; /* Premium white logo during splash */
       transition: fill .5s ease;
     }
 
     .logo-bar {
-      stroke: #1a1a1a;
+      stroke: #ffffff; /* White logo bar during splash */
       transition: stroke .5s ease;
     }
 
@@ -140,7 +167,7 @@
     .divider {
       width: 3px;
       height: 156.051px;
-      background: #1a1a1a;
+      background: #ffffff; /* White divider */
       flex-shrink: 0;
       margin-left: 27px;
       transition: background-color .5s ease;
@@ -152,7 +179,7 @@
       font-weight: 300;
       font-size: 24px;
       line-height: 1.21;
-      color: #1a1a1a;
+      color: #ffffff; /* White tagline */
       white-space: nowrap;
       transition: color .5s ease;
     }
