@@ -289,6 +289,51 @@
       border-color: rgba(0, 0, 0, 0.12);
     }
 
+    .tile-label {
+      overflow: hidden; /* Prevent shimmer leaking outside the footer stripe */
+    }
+
+    .tile-label::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -100%;
+      width: 40%;
+      height: 200%;
+      background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(236, 72, 153, 0.15) 35%,    /* subtle neon pink */
+        rgba(6, 182, 212, 0.45) 50%,     /* subtle cyan core */
+        rgba(168, 85, 247, 0.15) 65%,    /* subtle violet */
+        rgba(255, 255, 255, 0) 100%
+      );
+      transform: rotate(25deg); /* Slightly smaller rotation for short stripe */
+      z-index: 5;
+      pointer-events: none;
+      animation: neon-scan 16s infinite cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    /* Randomize start offsets for each card type to prevent synchronized pulses */
+    .tile-cooling .tile-label::before { animation-delay: 0s; }
+    .tile-washing .tile-label::before { animation-delay: 3s; }
+    .tile-ai .tile-label::before      { animation-delay: 7s; }
+    .tile-cooking .tile-label::before { animation-delay: 5s; }
+    .tile-more .tile-label::before    { animation-delay: 11s; }
+    .tile-support .tile-label::before { animation-delay: 1.5s; }
+
+    @keyframes neon-scan {
+      0% {
+        left: -100%;
+      }
+      8% {
+        left: 140%;
+      }
+      100% {
+        left: 140%; /* Remains off-screen for the rest of the 16s duration */
+      }
+    }
+
     .tile-product {
       justify-content: flex-start;
     }
@@ -386,7 +431,125 @@
     }
 
     .tile-cooling { grid-area: cooling; }
-    .tile-washing { grid-area: washing; }
+    .tile-washing { 
+      grid-area: washing; 
+      position: relative;
+      background: #f5f4f0; /* light sky background */
+      overflow: hidden;
+    }
+
+    /* Starry background layer for aurora tile using dark dust particles instead of white stars */
+    .tile-washing::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: 
+        radial-gradient(1px 1px at 20px 30px, #ccc, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 75px 140px, #ccc, rgba(0,0,0,0)),
+        radial-gradient(1.5px 1.5px at 120px 50px, #ccc, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 220px 280px, #ccc, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 160px 190px, rgba(200,200,200,0.7), rgba(0,0,0,0));
+      background-size: 100% 100%;
+      opacity: 0.45;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Waving Aurora Lights Layers optimized for light theme */
+    .wm-aurora-container {
+      position: absolute;
+      inset: -50px;
+      z-index: 2;
+      pointer-events: none;
+      filter: blur(40px);
+      opacity: 0.7; /* softer opacity on white */
+      mix-blend-mode: multiply; /* dynamic overlay on light theme */
+    }
+
+    .aurora-light {
+      position: absolute;
+      width: 150%;
+      height: 120%;
+      border-radius: 40%;
+      background: linear-gradient(90deg, 
+        rgba(34, 197, 94, 0.4) 0%,     /* neon green */
+        rgba(6, 182, 212, 0.3) 25%,    /* cyan */
+        rgba(168, 85, 247, 0.4) 50%,   /* neon violet */
+        rgba(236, 72, 153, 0.25) 75%,  /* pink */
+        rgba(34, 197, 94, 0.4) 100%
+      );
+      animation: aurora-wave 14s infinite linear;
+      transform-origin: 50% 50%;
+    }
+
+    .aurora-light:nth-child(2) {
+      animation-duration: 20s;
+      animation-delay: -5s;
+      opacity: 0.6;
+      background: linear-gradient(90deg, 
+        rgba(168, 85, 247, 0.3) 0%,
+        rgba(34, 197, 94, 0.45) 40%,
+        rgba(6, 182, 212, 0.3) 70%,
+        rgba(168, 85, 247, 0.3) 100%
+      );
+    }
+
+    @keyframes aurora-wave {
+      0% {
+        transform: rotate(0deg) translate(0, -10px) scale(1);
+      }
+      50% {
+        transform: rotate(180deg) translate(15px, 15px) scale(1.15);
+      }
+      100% {
+        transform: rotate(360deg) translate(0, -10px) scale(1);
+      }
+    }
+
+    /* Semi-transparent Room Backdrop Layer */
+    .tile-washing .wm-room-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 3; /* Between aurora (2) and foreground (4) */
+      pointer-events: none;
+      opacity: 0.95; /* High opacity to render white room background */
+      mix-blend-mode: multiply; /* Multiplies moving polar lights to show color transitions inside the white room */
+    }
+
+    .tile-washing .wm-room-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Isolated washing machine layer */
+    .tile-washing .wm-foreground {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 4; /* Top layer */
+      pointer-events: none;
+    }
+
+    .tile-washing .wm-foreground img {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* Align both layers exactly pixel-to-pixel */
+      pointer-events: none;
+      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.15));
+      transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .tile-washing:hover .wm-foreground img {
+      transform: scale(1.03); /* subtle pop matching exactly */
+    }
     .tile-ai {
       grid-area: ai;
       position: relative;
@@ -512,9 +675,9 @@
     .tile-cooking { grid-area: cooking; }
     .tile-support {
       grid-area: support;
-      background: linear-gradient(135deg, #0f4c81 0%, #1d3557 100%); /* modern deep cobalt/classic blue */
-      border-color: rgba(255, 255, 255, 0.1);
-      box-shadow: 0 8px 24px rgba(15, 76, 129, 0.2);
+      background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%); /* vibrant neon purple/indigo */
+      border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 8px 24px rgba(168, 85, 247, 0.25);
     }
     .tile-buttons {
       flex: 1;
@@ -659,7 +822,16 @@
         </div>
       </div>
       <div class="tile tile-washing" data-category="Washing">
-        <div class="tile-bg-photo"><img src="assets/washing-light.jpg" alt=""></div>
+        <div class="wm-aurora-container">
+          <div class="aurora-light"></div>
+          <div class="aurora-light"></div>
+        </div>
+        <div class="wm-room-bg">
+          <img src="assets/wm-room.png" alt="">
+        </div>
+        <div class="wm-foreground">
+          <img src="assets/wm flat cut.png" alt="Gauss NWL610A">
+        </div>
         <div class="tile-tag">Категорія</div>
         <div class="tile-label">
           <img src="assets/Logo.svg" class="tile-logo" alt="Gausshome">
@@ -957,6 +1129,19 @@
       }
 
       setTimeout(runCycle, 4200);
+    })();
+
+    // Interactive mouse movement glow for washing bento tile
+    (function () {
+      var tile = document.querySelector('.tile-washing');
+      if (!tile) return;
+      tile.addEventListener('mousemove', function (e) {
+        var rect = tile.getBoundingClientRect();
+        var x = ((e.clientX - rect.left) / rect.width) * 100;
+        var y = ((e.clientY - rect.top) / rect.height) * 100;
+        tile.style.setProperty('--mouse-x', x + '%');
+        tile.style.setProperty('--mouse-y', y + '%');
+      });
     })();
   </script>
 </body>
