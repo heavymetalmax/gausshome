@@ -321,28 +321,32 @@
     }
 
      .tile-label {
-      font-size: 20px;
+      position: absolute;
+      left: 18px;
+      bottom: 18px;
+      z-index: 2;
+      width: auto;
+      min-width: 140px;
+      
+      font-size: 18px;
       font-weight: 300;
       letter-spacing: 0.01em;
       word-break: break-word;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      gap: 4px;
+      gap: 3px;
       line-height: 1.15;
-      color: #1a1a1a; /* always dark text inside panel */
+      color: #1a1a1a;
       
-      /* Glassmorphic light semi-transparent panel */
+      /* Glassmorphic light semi-transparent floating panel */
       background: rgba(255, 255, 255, 0.65);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
       padding: 10px 14px;
       border-radius: 12px;
-      align-self: flex-start;
-      margin: 0;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
-      max-width: 90%;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
     }
 
     .tile-logo {
