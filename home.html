@@ -661,6 +661,20 @@
       filter: brightness(0); /* Black logo inside light panel */
     }
 
+    .tile-arrow {
+      flex-shrink: 0;
+      font-size: 16px;
+      opacity: 0.45;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+    .tile:hover .tile-arrow {
+      opacity: 0.9;
+      transform: translateX(3px);
+    }
+    .tile-ai .tile-arrow {
+      color: #fff;
+    }
+
     .tile-cooling,
     .tile-washing,
     .tile-cooking,
@@ -1022,6 +1036,7 @@
             <div class="tile-tag">Категорія</div>
             <div class="tile-label">
               cooling
+              <span class="tile-arrow">→</span>
             </div>
           </div>
           <div class="tile tile-washing" data-category="Washing">
@@ -1029,6 +1044,7 @@
             <div class="tile-tag">Категорія</div>
             <div class="tile-label">
               washing
+              <span class="tile-arrow">→</span>
             </div>
           </div>
           <div class="tile tile-ai" data-category="AIssistance">
@@ -1037,6 +1053,7 @@
             <div class="tile-tag">AI</div>
             <div class="tile-label">
               ai assistant
+              <span class="tile-arrow">→</span>
             </div>
           </div>
           <div class="tile tile-cooking" data-category="Cooking">
@@ -1045,6 +1062,7 @@
             <div class="tile-tag">Категорія</div>
             <div class="tile-label">
               cooking
+              <span class="tile-arrow">→</span>
             </div>
           </div>
           <div class="tile tile-more" data-category="More">
@@ -1053,6 +1071,7 @@
             <div class="tile-tag">Категорія</div>
             <div class="tile-label">
               more
+              <span class="tile-arrow">→</span>
             </div>
           </div>
           <div class="tile tile-support" data-category="Support">
@@ -1067,6 +1086,7 @@
             <div class="tile-tag">Категорія</div>
             <div class="tile-label">
               where to buy
+              <span class="tile-arrow">→</span>
             </div>
           </div>
         </div>
