@@ -18,11 +18,16 @@
       height: 100%;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
+      height: 100vh;
       background: #f5f4f0; /* Back to ultra clean premium light gray-cream */
       overflow: hidden;
       font-family: 'Inter', sans-serif;
@@ -30,11 +35,14 @@
     }
 
     body.phase-grid {
-      background: #f5f4f0; /* Maintain clean light background for the grid */
+      display: block;
+      height: 100vh;
+      overflow: hidden;
     }
 
     /* Animated gradient blobs in background with modern vibrant colors */
     .bg-glows {
+      display: none;
       position: absolute;
       inset: 0;
       width: 100%;
@@ -121,20 +129,43 @@
     }
 
     .logo-lockup {
-      position: relative;
-      display: flex;
-      align-items: center;
-      z-index: 2;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: clamp(120px, 32vw, 218px);
+      z-index: 10;
       transition: opacity .4s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .logo {
-      width: 218px;
+      width: 100%;
       height: auto;
-      flex-shrink: 0;
       opacity: 0;
       transform: scale(0.94);
       transition: opacity .35s ease, transform .5s cubic-bezier(.22, 1, .36, 1);
+    }
+
+    .splash-subtitle {
+      margin-top: clamp(10px, 3vw, 16px);
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: clamp(11px, 3vw, 14px);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #1a1a1a;
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity .35s ease, transform .5s cubic-bezier(.22, 1, .36, 1);
+    }
+
+    body.phase-logo .splash-subtitle {
+      opacity: 0.65;
+      transform: translateY(0);
     }
 
     .logo-path {
@@ -203,41 +234,64 @@
 
     /* ---- Home grid (appears after intro) ---- */
 
-    .home-grid {
-      position: fixed;
+    .main-content {
+      position: absolute;
       inset: 0;
+      width: 100%;
+      height: 100vh;
+      overflow-y: auto;
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
       display: flex;
       flex-direction: column;
-      padding: 40px 48px;
       opacity: 0;
       pointer-events: none;
       transition: opacity .5s ease .1s;
-      z-index: 3;
+      box-sizing: border-box;
     }
 
-    body.phase-grid .home-grid {
+    body.phase-grid .main-content {
       opacity: 1;
       pointer-events: auto;
     }
 
+    .home-grid {
+      display: flex;
+      flex-direction: column;
+      padding: 24px 48px 48px;
+      box-sizing: border-box;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+    }
+
     .home-header {
-      display: none; /* Hide header completely (logo and navbar) */
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
       align-items: center;
-      justify-content: space-between;
+      height: 70px;
+      padding: 0 48px;
+      background: #f5f4f0;
+      box-sizing: border-box;
+
       flex-shrink: 0;
-      margin-bottom: 16px;
     }
 
     .home-logo {
       width: 96px;
       height: auto;
+      justify-self: start;
     }
 
     .home-nav {
-      display: none; /* Turn off navbar */
+      display: flex;
       gap: 24px;
       font-size: 13px;
       color: rgba(26, 26, 26, 0.65);
+      justify-self: center;
     }
 
     .home-nav span {
@@ -246,6 +300,146 @@
 
     .home-nav span:hover {
       color: #1a1a1a;
+    }
+
+    .home-globe {
+      justify-self: end;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      color: rgba(26, 26, 26, 0.65);
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .home-globe:hover {
+      color: #1a1a1a;
+    }
+
+    .home-globe svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .section-hero {
+      height: calc(100vh - 70px);
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      flex-shrink: 0;
+    }
+
+    .hero-card-container {
+      flex: 1;
+      width: 100%;
+      padding: 24px 48px 12px 48px;
+      box-sizing: border-box;
+    }
+
+    .hero-card {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: none;
+      background: #a855f7;
+      overflow: hidden;
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+    }
+
+    .hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .hero-guy {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      height: 95%;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .hero-guy img {
+      height: 100%;
+      width: auto;
+      display: block;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: center;
+      padding-right: 80px;
+      text-align: right;
+      margin-left: auto;
+    }
+
+    .hero-lockup-logo {
+      width: 320px;
+      height: auto;
+      filter: brightness(0) invert(1);
+    }
+
+    .hero-tagline {
+      font-size: 24px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.85);
+      letter-spacing: 0.02em;
+      margin-top: 16px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    @media (max-width: 800px) {
+      .hero-content {
+        justify-content: flex-start;
+        padding-top: 60px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-guy {
+        left: 0;
+        height: 96%;
+      }
+      .hero-content {
+        padding-right: 0;
+        padding-top: 32px;
+        align-items: center;
+        justify-content: flex-start;
+        text-align: center;
+        width: 100%;
+      }
+      .hero-lockup-logo {
+        width: 200px;
+      }
+      .hero-tagline {
+        font-size: 16px;
+        margin-top: 10px;
+      }
+    }
+
+    .section-grid {
+      height: calc(100vh - 70px);
+      scroll-snap-align: start;
+      scroll-margin-top: 70px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
     }
 
     .bento {
@@ -257,10 +451,10 @@
         "cooling cooling washing washing"
         "cooling cooling washing washing"
         "cooling cooling washing washing"
-        "cooling cooling ai      ai"
-        "cooking cooking ai      ai"
-        "cooking cooking more    support"
-        "cooking cooking more    support";
+        "cooling cooling ai      more"
+        "cooking cooking ai      more"
+        "cooking cooking ai      support"
+        "cooking cooking ai      support";
       gap: 16px;
       min-height: 0;
     }
@@ -269,7 +463,7 @@
       position: relative;
       border-radius: 16px;
       border: 1px solid rgba(0, 0, 0, 0.06);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+      box-shadow: none;
       background: rgba(255, 255, 255, 0.72);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
@@ -280,12 +474,12 @@
       justify-content: flex-end;
       padding: 0; /* remove default padding so stripe fits perfectly */
       color: #1a1a1a;
-      transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s ease;
+      transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s ease;
     }
 
     .tile:hover {
       transform: translateY(-4px);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+      box-shadow: none;
       border-color: rgba(0, 0, 0, 0.12);
     }
 
@@ -293,46 +487,7 @@
       overflow: hidden; /* Prevent shimmer leaking outside the footer stripe */
     }
 
-    .tile-label::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -100%;
-      width: 40%;
-      height: 200%;
-      background: linear-gradient(
-        to right,
-        rgba(255, 255, 255, 0) 0%,
-        rgba(236, 72, 153, 0.15) 35%,    /* subtle neon pink */
-        rgba(6, 182, 212, 0.45) 50%,     /* subtle cyan core */
-        rgba(168, 85, 247, 0.15) 65%,    /* subtle violet */
-        rgba(255, 255, 255, 0) 100%
-      );
-      transform: rotate(25deg); /* Slightly smaller rotation for short stripe */
-      z-index: 5;
-      pointer-events: none;
-      animation: neon-scan 16s infinite cubic-bezier(0.25, 1, 0.5, 1);
-    }
 
-    /* Randomize start offsets for each card type to prevent synchronized pulses */
-    .tile-cooling .tile-label::before { animation-delay: 0s; }
-    .tile-washing .tile-label::before { animation-delay: 3s; }
-    .tile-ai .tile-label::before      { animation-delay: 7s; }
-    .tile-cooking .tile-label::before { animation-delay: 5s; }
-    .tile-more .tile-label::before    { animation-delay: 11s; }
-    .tile-support .tile-label::before { animation-delay: 1.5s; }
-
-    @keyframes neon-scan {
-      0% {
-        left: -100%;
-      }
-      8% {
-        left: 140%;
-      }
-      100% {
-        left: 140%; /* Remains off-screen for the rest of the 16s duration */
-      }
-    }
 
     .tile-product {
       justify-content: flex-start;
@@ -368,11 +523,11 @@
     }
 
     .tile-cooling .tile-bg-photo img {
-      object-position: top; /* Align photos to top edge */
+      object-position: center 30%;
     }
 
     .tile-washing .tile-bg-photo img {
-      object-position: center bottom;
+      object-position: right bottom;
     }
 
     .tile-bg-photo::after {
@@ -419,7 +574,7 @@
       padding: 14px 20px;
       border-bottom-left-radius: 15px; /* match parent tile border-radius minus border offset */
       border-bottom-right-radius: 15px;
-      box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.03);
+      box-shadow: none;
     }
 
     .tile-logo {
@@ -430,135 +585,26 @@
       filter: brightness(0); /* Black logo inside light panel */
     }
 
+    .tile-cooling,
+    .tile-washing,
+    .tile-cooking,
+    .tile-more {
+      background: transparent;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+
     .tile-cooling { grid-area: cooling; }
-    .tile-washing { 
-      grid-area: washing; 
-      position: relative;
-      background: #f5f4f0; /* light sky background */
-      overflow: hidden;
-    }
-
-    /* Starry background layer for aurora tile using dark dust particles instead of white stars */
-    .tile-washing::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: 
-        radial-gradient(1px 1px at 20px 30px, #ccc, rgba(0,0,0,0)),
-        radial-gradient(1px 1px at 75px 140px, #ccc, rgba(0,0,0,0)),
-        radial-gradient(1.5px 1.5px at 120px 50px, #ccc, rgba(0,0,0,0)),
-        radial-gradient(1px 1px at 220px 280px, #ccc, rgba(0,0,0,0)),
-        radial-gradient(2px 2px at 160px 190px, rgba(200,200,200,0.7), rgba(0,0,0,0));
-      background-size: 100% 100%;
-      opacity: 0.45;
-      z-index: 1;
-      pointer-events: none;
-    }
-
-    /* Waving Aurora Lights Layers optimized for light theme */
-    .wm-aurora-container {
-      position: absolute;
-      inset: -50px;
-      z-index: 2;
-      pointer-events: none;
-      filter: blur(40px);
-      opacity: 0.7; /* softer opacity on white */
-      mix-blend-mode: multiply; /* dynamic overlay on light theme */
-    }
-
-    .aurora-light {
-      position: absolute;
-      width: 150%;
-      height: 120%;
-      border-radius: 40%;
-      background: linear-gradient(90deg, 
-        rgba(34, 197, 94, 0.4) 0%,     /* neon green */
-        rgba(6, 182, 212, 0.3) 25%,    /* cyan */
-        rgba(168, 85, 247, 0.4) 50%,   /* neon violet */
-        rgba(236, 72, 153, 0.25) 75%,  /* pink */
-        rgba(34, 197, 94, 0.4) 100%
-      );
-      animation: aurora-wave 14s infinite linear;
-      transform-origin: 50% 50%;
-    }
-
-    .aurora-light:nth-child(2) {
-      animation-duration: 20s;
-      animation-delay: -5s;
-      opacity: 0.6;
-      background: linear-gradient(90deg, 
-        rgba(168, 85, 247, 0.3) 0%,
-        rgba(34, 197, 94, 0.45) 40%,
-        rgba(6, 182, 212, 0.3) 70%,
-        rgba(168, 85, 247, 0.3) 100%
-      );
-    }
-
-    @keyframes aurora-wave {
-      0% {
-        transform: rotate(0deg) translate(0, -10px) scale(1);
-      }
-      50% {
-        transform: rotate(180deg) translate(15px, 15px) scale(1.15);
-      }
-      100% {
-        transform: rotate(360deg) translate(0, -10px) scale(1);
-      }
-    }
-
-    /* Semi-transparent Room Backdrop Layer */
-    .tile-washing .wm-room-bg {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 3; /* Between aurora (2) and foreground (4) */
-      pointer-events: none;
-      opacity: 0.95; /* High opacity to render white room background */
-      mix-blend-mode: multiply; /* Multiplies moving polar lights to show color transitions inside the white room */
-    }
-
-    .tile-washing .wm-room-bg img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    /* Isolated washing machine layer */
-    .tile-washing .wm-foreground {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 4; /* Top layer */
-      pointer-events: none;
-    }
-
-    .tile-washing .wm-foreground img {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover; /* Align both layers exactly pixel-to-pixel */
-      pointer-events: none;
-      filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.15));
-      transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-    .tile-washing:hover .wm-foreground img {
-      transform: scale(1.03); /* subtle pop matching exactly */
-    }
+    .tile-washing { grid-area: washing; }
     .tile-ai {
       grid-area: ai;
       position: relative;
-      background: rgba(255, 255, 255, 0.85);
+      background: rgba(255, 255, 255, 0.55);
       border-color: rgba(255, 255, 255, 0.6);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+      box-shadow: none;
       color: #1a1a1a;
     }
-    .tile-ai canvas {
+    .ai-particles {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -567,29 +613,29 @@
     }
     .ai-chat-demo {
       position: absolute;
-      top: 24px;
-      left: 24px;
-      right: 24px;
-      bottom: 120px;
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      bottom: 60px; /* Aligns right above the tile label stripe */
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
-      gap: 12px;
+      gap: 8px;
       pointer-events: none;
-      font-size: 14px;
+      font-size: 11.5px; /* Slightly smaller text for 1-column layout */
       overflow: hidden;
     }
     .chat-bubble {
-      max-width: 80%;
-      padding: 10px 14px;
-      border-radius: 14px;
-      line-height: 1.4;
+      max-width: 95%; /* Take up more width in a narrow card */
+      padding: 8px 10px; /* More compact padding */
+      border-radius: 12px;
+      line-height: 1.35;
       opacity: 1;
       transform: translateY(0);
       transition: opacity 0.4s ease, transform 0.4s ease;
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+      box-shadow: none;
     }
     .chat-bubble.user {
       align-self: flex-end;
@@ -672,12 +718,31 @@
       }
     }
     .tile-ai .tile-tag { color: rgba(26, 26, 26, 0.6); }
-    .tile-cooking { grid-area: cooking; }
+    .tile-cooking { 
+      grid-area: cooking; 
+      position: relative;
+    }
+    .tile-coming-soon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #ffffff;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+      z-index: 2;
+      pointer-events: none;
+    }
     .tile-support {
       grid-area: support;
-      background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%); /* vibrant neon purple/indigo */
-      border-color: rgba(255, 255, 255, 0.15);
-      box-shadow: 0 8px 24px rgba(168, 85, 247, 0.25);
+      background: transparent;
+      border-color: transparent;
+      box-shadow: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
     }
     .tile-buttons {
       flex: 1;
@@ -686,11 +751,11 @@
       align-items: flex-start;
       justify-content: center;
       gap: 10px;
-      padding: 18px 18px 70px; /* add bottom padding to prevent overlapping with footer stripe */
+      padding: 18px;
     }
     .tile-btn {
       font-size: 14px;
-      color: rgba(255, 255, 255, 0.75);
+      color: rgba(26, 26, 26, 0.6);
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -704,7 +769,7 @@
       transition: opacity 0.2s ease, transform 0.2s ease;
     }
     .tile-btn:hover {
-      color: #fff;
+      color: #1a1a1a;
       gap: 8px;
     }
     .tile-btn:hover::after {
@@ -736,7 +801,6 @@
 
     @media (max-width: 640px) {
       .home-grid {
-        position: fixed;
         padding: 12px;
         overflow-y: auto;
         align-items: stretch;
@@ -749,7 +813,7 @@
         gap: 10px;
       }
       .tile {
-        min-height: 180px;
+        min-height: 260px;
         padding: 12px;
       }
       .tile-label {
@@ -758,13 +822,6 @@
       .tile-logo {
         height: 26px;
         width: auto;
-      }
-      .tile-ai {
-        min-height: 260px;
-      }
-      .tile-more,
-      .tile-support {
-        min-height: 140px;
       }
     }
 
@@ -784,98 +841,95 @@
     <div class="bg-glow-3"></div>
   </div>
   <div class="logo-lockup">
-    <svg class="logo" viewBox="0 0 284 221" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path class="logo-path" d="M28.5 157.25C23.875 157.25 19.7083 156.104 16 153.812C12.25 151.521 9.22917 148.438 6.9375 144.562C4.6875 140.688 3.5625 136.354 3.5625 131.562V91C3.5625 86.3333 4.70833 82.0833 7 78.25C9.25 74.375 12.2708 71.2917 16.0625 69C19.8542 66.6667 24 65.5 28.5 65.5C33.2083 65.5 37.4583 66.625 41.25 68.875C45.0417 71.1667 48.0417 74.2292 50.25 78.0625C52.5 81.8958 53.625 86.2083 53.625 91V96.875C53.625 97.2083 53.4167 97.375 53 97.375H38.625C38.2917 97.375 38.125 97.2083 38.125 96.875V92C38.125 88.75 37.2083 86.0625 35.375 83.9375C33.5417 81.8125 31.25 80.75 28.5 80.75C26.0417 80.75 23.8542 81.7708 21.9375 83.8125C20.0208 85.8542 19.0625 88.25 19.0625 91V131.562C19.0625 134.354 20 136.771 21.875 138.812C23.75 140.812 25.9583 141.812 28.5 141.812C31.25 141.812 33.5417 140.833 35.375 138.875C37.2083 136.875 38.125 134.438 38.125 131.562V125.25H29.1875C28.7292 125.25 28.5 125.042 28.5 124.625V110.312C28.5 109.896 28.7292 109.688 29.1875 109.688H53.125C53.4583 109.688 53.625 109.896 53.625 110.312V131.562C53.625 136.354 52.5 140.688 50.25 144.562C47.9583 148.438 44.9375 151.521 41.1875 153.812C37.4375 156.104 33.2083 157.25 28.5 157.25ZM138.375 157.25C133.875 157.25 129.708 156.083 125.875 153.75C122.042 151.417 118.979 148.292 116.688 144.375C114.438 140.417 113.312 136.104 113.312 131.438L113.562 67.4375C113.562 67.1042 113.729 66.9375 114.062 66.9375H128.438C128.771 66.9375 128.938 67.1042 128.938 67.4375V131.438C128.938 134.312 129.854 136.771 131.688 138.812C133.521 140.812 135.75 141.812 138.375 141.812C141.125 141.812 143.417 140.812 145.25 138.812C147.083 136.771 148 134.312 148 131.438V67.4375C148 67.1042 148.167 66.9375 148.5 66.9375H162.875C163.208 66.9375 163.375 67.1042 163.375 67.4375L163.625 131.438C163.625 136.146 162.5 140.479 160.25 144.438C157.958 148.354 154.917 151.479 151.125 153.812C147.333 156.104 143.083 157.25 138.375 157.25ZM195.438 157.25C190.896 157.25 186.708 156.083 182.875 153.75C179.083 151.417 176.042 148.312 173.75 144.438C171.5 140.521 170.375 136.229 170.375 131.562V125.688C170.375 125.229 170.583 125 171 125H185.375C185.708 125 185.875 125.229 185.875 125.688V131.562C185.875 134.354 186.812 136.771 188.688 138.812C190.562 140.812 192.812 141.812 195.438 141.812C198.104 141.812 200.375 140.792 202.25 138.75C204.125 136.667 205.062 134.271 205.062 131.562C205.062 128.438 203.021 125.708 198.938 123.375C198.271 122.958 197.396 122.458 196.312 121.875C195.271 121.25 194.021 120.542 192.562 119.75C191.104 118.958 189.688 118.188 188.312 117.438C186.938 116.646 185.604 115.896 184.312 115.188C179.646 112.438 176.167 109 173.875 104.875C171.625 100.708 170.5 96.0417 170.5 90.875C170.5 86.125 171.667 81.8333 174 78C176.333 74.2083 179.375 71.2083 183.125 69C186.917 66.75 191.021 65.625 195.438 65.625C199.979 65.625 204.146 66.75 207.938 69C211.729 71.2917 214.75 74.3333 217 78.125C219.292 81.9167 220.438 86.1667 220.438 90.875V101.375C220.438 101.708 220.271 101.875 219.938 101.875H205.562C205.229 101.875 205.062 101.708 205.062 101.375L204.938 90.875C204.938 87.875 204 85.4375 202.125 83.5625C200.25 81.6875 198.021 80.75 195.438 80.75C192.812 80.75 190.562 81.75 188.688 83.75C186.812 85.75 185.875 88.125 185.875 90.875C185.875 93.6667 186.458 96 187.625 97.875C188.833 99.75 191.021 101.542 194.188 103.25C194.521 103.417 195.292 103.833 196.5 104.5C197.708 105.167 199.042 105.917 200.5 106.75C202 107.542 203.354 108.271 204.562 108.938C205.771 109.562 206.5 109.938 206.75 110.062C211 112.438 214.354 115.354 216.812 118.812C219.312 122.271 220.562 126.521 220.562 131.562C220.562 136.438 219.438 140.812 217.188 144.688C214.896 148.562 211.854 151.625 208.062 153.875C204.271 156.125 200.062 157.25 195.438 157.25ZM251.188 157.25C246.646 157.25 242.458 156.083 238.625 153.75C234.833 151.417 231.792 148.312 229.5 144.438C227.25 140.521 226.125 136.229 226.125 131.562V125.688C226.125 125.229 226.333 125 226.75 125H241.125C241.458 125 241.625 125.229 241.625 125.688V131.562C241.625 134.354 242.562 136.771 244.438 138.812C246.312 140.812 248.562 141.812 251.188 141.812C253.854 141.812 256.125 140.792 258 138.75C259.875 136.667 260.812 134.271 260.812 131.562C260.812 128.438 258.771 125.708 254.688 123.375C254.021 122.958 253.146 122.458 252.062 121.875C251.021 121.25 249.771 120.542 248.312 119.75C246.854 118.958 245.438 118.188 244.062 117.438C242.688 116.646 241.354 115.896 240.062 115.188C235.396 112.438 231.917 109 229.625 104.875C227.375 100.708 226.25 96.0417 226.25 90.875C226.25 86.125 227.417 81.8333 229.75 78C232.083 74.2083 235.125 71.2083 238.875 69C242.667 66.75 246.771 65.625 251.188 65.625C255.729 65.625 259.896 66.75 263.688 69C267.479 71.2917 270.5 74.3333 272.75 78.125C275.042 81.9167 276.188 86.1667 276.188 90.875V101.375C276.188 101.708 276.021 101.875 275.688 101.875H261.312C260.979 101.875 260.812 101.708 260.812 101.375L260.688 90.875C260.688 87.875 259.75 85.4375 257.875 83.5625C256 81.6875 253.771 80.75 251.188 80.75C248.562 80.75 246.312 81.75 244.438 83.75C242.562 85.75 241.625 88.125 241.625 90.875C241.625 93.6667 242.208 96 243.375 97.875C244.583 99.75 246.771 101.542 249.938 103.25C250.271 103.417 251.042 103.833 252.25 104.5C253.458 105.167 254.792 105.917 256.25 106.75C257.75 107.542 259.104 108.271 260.312 108.938C261.521 109.562 262.25 109.938 262.5 110.062C266.75 112.438 270.104 115.354 272.562 118.812C275.062 122.271 276.312 126.521 276.312 131.562C276.312 136.438 275.188 140.812 272.938 144.688C270.646 148.562 267.604 151.625 263.812 153.875C260.021 156.125 255.812 157.25 251.188 157.25Z" fill="#1a1a1a"/>
-      <path class="logo-path" d="M83.375 63.75C87.875 63.75 92.0417 64.9167 95.875 67.25C99.7083 69.5833 102.771 72.7083 105.063 76.625C107.313 80.5833 108.438 84.8958 108.438 89.5625L108.188 153.562C108.188 153.896 108.021 154.062 107.688 154.062H93.3125C92.9792 154.062 92.8125 153.896 92.8125 153.562L92.8125 89.5625C92.8125 86.6875 91.8958 84.2292 90.0625 82.1875C88.2292 80.1875 86 79.1875 83.375 79.1875C80.625 79.1875 78.3333 80.1875 76.5 82.1875C74.6667 84.2292 73.75 86.6875 73.75 89.5625L73.75 153.562C73.75 153.896 73.5833 154.062 73.25 154.062H58.875C58.5417 154.062 58.375 153.896 58.375 153.562L58.125 89.5625C58.125 84.8542 59.25 80.5208 61.5 76.5625C63.7917 72.6458 66.8333 69.5208 70.625 67.1875C74.4167 64.8958 78.6667 63.75 83.375 63.75Z" fill="#1a1a1a"/>
-      <line class="logo-bar" x1="73" y1="115.5" x2="100.136" y2="115.5" stroke="#1a1a1a" stroke-width="15"/>
-    </svg>
-    <div class="reveal-track">
-      <div class="reveal-content">
-        <div class="divider"></div>
-        <div class="tagline">the science<br>of smart choices</div>
-      </div>
-    </div>
+    <img class="logo" src="assets/Logo.svg" alt="Gauss">
+    <div class="splash-subtitle">home appliances</div>
   </div>
 
-  <div class="home-grid">
+  <div class="main-content">
+    <section class="section-hero">
+      <div class="hero-card-container">
+        <div class="hero-card">
+          <canvas class="hero-canvas"></canvas>
+          <div class="hero-guy">
+            <img src="assets/guy.png" alt="">
+          </div>
+          <div class="hero-content">
+            <img class="hero-lockup-logo" src="assets/Logo.svg" alt="Gauss">
+            <div class="hero-tagline">the science of smart choices</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <div class="home-header">
-      <svg class="home-logo" viewBox="0 0 284 221" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M28.5 157.25C23.875 157.25 19.7083 156.104 16 153.812C12.25 151.521 9.22917 148.438 6.9375 144.562C4.6875 140.688 3.5625 136.354 3.5625 131.562V91C3.5625 86.3333 4.70833 82.0833 7 78.25C9.25 74.375 12.2708 71.2917 16.0625 69C19.8542 66.6667 24 65.5 28.5 65.5C33.2083 65.5 37.4583 66.625 41.25 68.875C45.0417 71.1667 48.0417 74.2292 50.25 78.0625C52.5 81.8958 53.625 86.2083 53.625 91V96.875C53.625 97.2083 53.4167 97.375 53 97.375H38.625C38.2917 97.375 38.125 97.2083 38.125 96.875V92C38.125 88.75 37.2083 86.0625 35.375 83.9375C33.5417 81.8125 31.25 80.75 28.5 80.75C26.0417 80.75 23.8542 81.7708 21.9375 83.8125C20.0208 85.8542 19.0625 88.25 19.0625 91V131.562C19.0625 134.354 20 136.771 21.875 138.812C23.75 140.812 25.9583 141.812 28.5 141.812C31.25 141.812 33.5417 140.833 35.375 138.875C37.2083 136.875 38.125 134.438 38.125 131.562V125.25H29.1875C28.7292 125.25 28.5 125.042 28.5 124.625V110.312C28.5 109.896 28.7292 109.688 29.1875 109.688H53.125C53.4583 109.688 53.625 109.896 53.625 110.312V131.562C53.625 136.354 52.5 140.688 50.25 144.562C47.9583 148.438 44.9375 151.521 41.1875 153.812C37.4375 156.104 33.2083 157.25 28.5 157.25ZM138.375 157.25C133.875 157.25 129.708 156.083 125.875 153.75C122.042 151.417 118.979 148.292 116.688 144.375C114.438 140.417 113.312 136.104 113.312 131.438L113.562 67.4375C113.562 67.1042 113.729 66.9375 114.062 66.9375H128.438C128.771 66.9375 128.938 67.1042 128.938 67.4375V131.438C128.938 134.312 129.854 136.771 131.688 138.812C133.521 140.812 135.75 141.812 138.375 141.812C141.125 141.812 143.417 140.812 145.25 138.812C147.083 136.771 148 134.312 148 131.438V67.4375C148 67.1042 148.167 66.9375 148.5 66.9375H162.875C163.208 66.9375 163.375 67.1042 163.375 67.4375L163.625 131.438C163.625 136.146 162.5 140.479 160.25 144.438C157.958 148.354 154.917 151.479 151.125 153.812C147.333 156.104 143.083 157.25 138.375 157.25ZM195.438 157.25C190.896 157.25 186.708 156.083 182.875 153.75C179.083 151.417 176.042 148.312 173.75 144.438C171.5 140.521 170.375 136.229 170.375 131.562V125.688C170.375 125.229 170.583 125 171 125H185.375C185.708 125 185.875 125.229 185.875 125.688V131.562C185.875 134.354 186.812 136.771 188.688 138.812C190.562 140.812 192.812 141.812 195.438 141.812C198.104 141.812 200.375 140.792 202.25 138.75C204.125 136.667 205.062 134.271 205.062 131.562C205.062 128.438 203.021 125.708 198.938 123.375C198.271 122.958 197.396 122.458 196.312 121.875C195.271 121.25 194.021 120.542 192.562 119.75C191.104 118.958 189.688 118.188 188.312 117.438C186.938 116.646 185.604 115.896 184.312 115.188C179.646 112.438 176.167 109 173.875 104.875C171.625 100.708 170.5 96.0417 170.5 90.875C170.5 86.125 171.667 81.8333 174 78C176.333 74.2083 179.375 71.2083 183.125 69C186.917 66.75 191.021 65.625 195.438 65.625C199.979 65.625 204.146 66.75 207.938 69C211.729 71.2917 214.75 74.3333 217 78.125C219.292 81.9167 220.438 86.1667 220.438 90.875V101.375C220.438 101.708 220.271 101.875 219.938 101.875H205.562C205.229 101.875 205.062 101.708 205.062 101.375L204.938 90.875C204.938 87.875 204 85.4375 202.125 83.5625C200.25 81.6875 198.021 80.75 195.438 80.75C192.812 80.75 190.562 81.75 188.688 83.75C186.812 85.75 185.875 88.125 185.875 90.875C185.875 93.6667 186.458 96 187.625 97.875C188.833 99.75 191.021 101.542 194.188 103.25C194.521 103.417 195.292 103.833 196.5 104.5C197.708 105.167 199.042 105.917 200.5 106.75C202 107.542 203.354 108.271 204.562 108.938C205.771 109.562 206.5 109.938 206.75 110.062C211 112.438 214.354 115.354 216.812 118.812C219.312 122.271 220.562 126.521 220.562 131.562C220.562 136.438 219.438 140.812 217.188 144.688C214.896 148.562 211.854 151.625 208.062 153.875C204.271 156.125 200.062 157.25 195.438 157.25ZM251.188 157.25C246.646 157.25 242.458 156.083 238.625 153.75C234.833 151.417 231.792 148.312 229.5 144.438C227.25 140.521 226.125 136.229 226.125 131.562V125.688C226.125 125.229 226.333 125 226.75 125H241.125C241.458 125 241.625 125.229 241.625 125.688V131.562C241.625 134.354 242.562 136.771 244.438 138.812C246.312 140.812 248.562 141.812 251.188 141.812C253.854 141.812 256.125 140.792 258 138.75C259.875 136.667 260.812 134.271 260.812 131.562C260.812 128.438 258.771 125.708 254.688 123.375C254.021 122.958 253.146 122.458 252.062 121.875C251.021 121.25 249.771 120.542 248.312 119.75C246.854 118.958 245.438 118.188 244.062 117.438C242.688 116.646 241.354 115.896 240.062 115.188C235.396 112.438 231.917 109 229.625 104.875C227.375 100.708 226.25 96.0417 226.25 90.875C226.25 86.125 227.417 81.8333 229.75 78C232.083 74.2083 235.125 71.2083 238.875 69C242.667 66.75 246.771 65.625 251.188 65.625C255.729 65.625 259.896 66.75 263.688 69C267.479 71.2917 270.5 74.3333 272.75 78.125C275.042 81.9167 276.188 86.1667 276.188 90.875V101.375C276.188 101.708 276.021 101.875 275.688 101.875H261.312C260.979 101.875 260.812 101.708 260.812 101.375L260.688 90.875C260.688 87.875 259.75 85.4375 257.875 83.5625C256 81.6875 253.771 80.75 251.188 80.75C248.562 80.75 246.312 81.75 244.438 83.75C242.562 85.75 241.625 88.125 241.625 90.875C241.625 93.6667 242.208 96 243.375 97.875C244.583 99.75 246.771 101.542 249.938 103.25C250.271 103.417 251.042 103.833 252.25 104.5C253.458 105.167 254.792 105.917 256.25 106.75C257.75 107.542 259.104 108.271 260.312 108.938C261.521 109.562 262.25 109.938 262.5 110.062C266.75 112.438 270.104 115.354 272.562 118.812C275.062 122.271 276.312 126.521 276.312 131.562C276.312 136.438 275.188 140.812 272.938 144.688C270.646 148.562 267.604 151.625 263.812 153.875C260.021 156.125 255.812 157.25 251.188 157.25Z" fill="#1a1a1a"/>
-        <path d="M83.375 63.75C87.875 63.75 92.0417 64.9167 95.875 67.25C99.7083 69.5833 102.771 72.7083 105.063 76.625C107.313 80.5833 108.438 84.8958 108.438 89.5625L108.188 153.562C108.188 153.896 108.021 154.062 107.688 154.062H93.3125C92.9792 154.062 92.8125 153.896 92.8125 153.562L92.8125 89.5625C92.8125 86.6875 91.8958 84.2292 90.0625 82.1875C88.2292 80.1875 86 79.1875 83.375 79.1875C80.625 79.1875 78.3333 80.1875 76.5 82.1875C74.6667 84.2292 73.75 86.6875 73.75 89.5625L73.75 153.562C73.75 153.896 73.5833 154.062 73.25 154.062H58.875C58.5417 154.062 58.375 153.896 58.375 153.562L58.125 89.5625C58.125 84.8542 59.25 80.5208 61.5 76.5625C63.7917 72.6458 66.8333 69.5208 70.625 67.1875C74.4167 64.8958 78.6667 63.75 83.375 63.75Z" fill="#1a1a1a"/>
-        <line x1="73" y1="115.5" x2="100.136" y2="115.5" stroke="#1a1a1a" stroke-width="15"/>
-      </svg>
+      <img class="home-logo" src="assets/Logo.svg" alt="Gauss">
       <nav class="home-nav">
         <span data-category="Cooling">Cooling</span>
         <span data-category="Washing">Washing</span>
         <span data-category="Cooking">Cooking</span>
         <span data-category="More">More</span>
       </nav>
+      <div class="home-globe" aria-label="Language">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="12" cy="12" r="9"/>
+          <ellipse cx="12" cy="12" rx="4" ry="9"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+        </svg>
+      </div>
     </div>
 
-    <div class="bento">
-      <div class="tile tile-cooling" data-category="Cooling">
-        <div class="tile-bg-photo"><img src="assets/cooling-light.jpg" alt=""></div>
-        <div class="tile-tag">Категорія</div>
-        <div class="tile-label">
-          <img src="assets/Logo.svg" class="tile-logo" alt="Gausshome">
-          cooling
+    <section class="section-grid">
+      <div class="home-grid">
+        <div class="bento">
+          <div class="tile tile-cooling" data-category="Cooling">
+            <div class="tile-bg-photo"><img src="assets/cooling-light.jpg?v=5" alt=""></div>
+            <div class="tile-tag">Категорія</div>
+            <div class="tile-label">
+              cooling
+            </div>
+          </div>
+          <div class="tile tile-washing" data-category="Washing">
+            <div class="tile-bg-photo"><img src="assets/washing-light.jpg?v=5" alt=""></div>
+            <div class="tile-tag">Категорія</div>
+            <div class="tile-label">
+              washing
+            </div>
+          </div>
+          <div class="tile tile-ai" data-category="AIssistance">
+            <canvas class="ai-particles"></canvas>
+            <div class="ai-chat-demo"></div>
+            <div class="tile-tag">AI</div>
+            <div class="tile-label">
+              ai assistant
+            </div>
+          </div>
+          <div class="tile tile-cooking" data-category="Cooking">
+            <div class="tile-bg-photo"><img src="assets/cooking-light.jpg?v=5" alt=""></div>
+            <div class="tile-coming-soon">Coming Soon</div>
+            <div class="tile-tag">Категорія</div>
+            <div class="tile-label">
+              cooking
+            </div>
+          </div>
+          <div class="tile tile-more" data-category="More">
+            <div class="tile-bg-photo"><img src="assets/more-light.jpg?v=6" alt=""></div>
+            <div class="tile-coming-soon">Coming Soon</div>
+            <div class="tile-tag">Категорія</div>
+            <div class="tile-label">
+              more
+            </div>
+          </div>
+          <div class="tile tile-support" data-category="Support">
+            <div class="tile-buttons">
+              <span class="tile-btn" data-category="Brand">Brand</span>
+              <span class="tile-btn" data-category="Contacts">Contacts</span>
+              <span class="tile-btn" data-category="Warranty">Warranty</span>
+              <span class="tile-btn" data-category="Register">Register your product</span>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="tile tile-washing" data-category="Washing">
-        <div class="wm-aurora-container">
-          <div class="aurora-light"></div>
-          <div class="aurora-light"></div>
-        </div>
-        <div class="wm-room-bg">
-          <img src="assets/wm-room.png" alt="">
-        </div>
-        <div class="wm-foreground">
-          <img src="assets/wm flat cut.png" alt="Gauss NWL610A">
-        </div>
-        <div class="tile-tag">Категорія</div>
-        <div class="tile-label">
-          <img src="assets/Logo.svg" class="tile-logo" alt="Gausshome">
-          washing
-        </div>
-      </div>
-      <div class="tile tile-ai" data-category="AIssistance">
-        <canvas class="ai-canvas"></canvas>
-        <div class="ai-chat-demo"></div>
-        <div class="tile-tag">AI</div>
-        <div class="tile-label">
-          <img src="assets/Logo.svg" class="tile-logo" alt="Gausshome">
-          ai assistant
-        </div>
-      </div>
-      <div class="tile tile-cooking" data-category="Cooking">
-        <div class="tile-bg-photo"><img src="assets/cooking-light.jpg" alt=""></div>
-        <div class="tile-tag">Категорія</div>
-        <div class="tile-label">
-          <img src="assets/Logo.svg" class="tile-logo" alt="Gausshome">
-          cooking
-        </div>
-      </div>
-      <div class="tile tile-more" data-category="More">
-        <div class="tile-bg-photo"><img src="assets/more-light.jpg" alt=""></div>
-        <div class="tile-tag">Категорія</div>
-        <div class="tile-label">
-          <img src="assets/Logo.svg" class="tile-logo" alt="Gausshome">
-          more
-        </div>
-      </div>
-      <div class="tile tile-support" data-category="Support">
-        <div class="tile-buttons">
-          <span class="tile-btn" data-category="Brand">Brand</span>
-          <span class="tile-btn" data-category="Contacts">Contacts</span>
-          <span class="tile-btn" data-category="Warranty">Warranty</span>
-        </div>
-        <div class="tile-tag">Сервіс</div>
-        <div class="tile-label">
-          <img src="assets/Logo.svg" class="tile-logo" alt="Gausshome">
-          support
-        </div>
-      </div>
-    </div>
+    </section>
   </div>
 
   <script>
@@ -888,21 +942,22 @@
         return;
       }
 
-      setTimeout(function () { body.classList.add('phase-lockup'); }, 800);
-      setTimeout(function () { body.classList.add('phase-grid'); }, 3000);
+      setTimeout(function () { body.classList.add('phase-lockup'); }, 600);
+      setTimeout(function () { body.classList.add('phase-grid'); }, 1800);
     })();
 
+    // Initialize Hero Shader
     (function () {
-      var canvas = document.querySelector('.ai-canvas');
+      var canvas = document.querySelector('.hero-canvas');
       if (!canvas) return;
 
       var gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
       if (!gl) return;
 
       var vertexShaderSource =
-        'attribute vec2 a_position;' +
-        'void main() {' +
-        '  gl_Position = vec4(a_position, 0, 1);' +
+        'attribute vec2 a_position;\n' +
+        'void main() {\n' +
+        '  gl_Position = vec4(a_position, 0, 1);\n' +
         '}';
 
       var fragmentShaderSource =
@@ -915,26 +970,27 @@
         'uniform float uYOffset;' +
         'const float MAX_LINES = 20.0;' +
         'float wave(vec2 uv, float speed, float yPos, float thickness, float softness) {' +
-        '  float y = sin(iTime * speed + uv.x * 8.0) * yPos - uYOffset;' +
-        '  return 1.0 - smoothstep(thickness, thickness + softness, abs(uv.y - y));' +
+        '  float falloff = smoothstep(-0.5, 0.8, uv.x);' +
+        '  float y = sin(iTime * speed - uv.x * 8.0) * yPos * falloff - uYOffset;' +
+        '  return (1.0 - smoothstep(thickness, thickness + softness, abs(uv.y - y))) * falloff;' +
         '}' +
         'void main() {' +
         '  vec2 bgUv = gl_FragCoord.xy / iResolution.xy;' +
         '  float t = iTime * uSpeed * 0.4;' +
         '  float val1 = sin(bgUv.x * 3.0 + t) * cos(bgUv.y * 3.0 - t);' +
         '  float val2 = cos(bgUv.x * 2.0 - t * 0.8) * sin(bgUv.y * 4.0 + t * 1.2);' +
-        '  vec3 colPeach = vec3(0.98, 0.85, 0.8);' +
-        '  vec3 colLavender = vec3(0.9, 0.85, 0.95);' +
-        '  vec3 colCream = vec3(0.96, 0.94, 0.9);' +
-        '  vec3 colBlue = vec3(0.85, 0.9, 0.96);' +
-        '  vec3 col = mix(colCream, colPeach, val1 * 0.5 + 0.5);' +
-        '  col = mix(col, colLavender, val2 * 0.5 + 0.5);' +
-        '  col = mix(col, colBlue, sin(t * 0.5) * 0.5 + 0.5);' +
-        '  col = col * 0.8 + 0.2;' +
+        '  vec3 colPurple = vec3(0.659, 0.333, 0.969);' +
+        '  vec3 colIndigo = vec3(0.388, 0.400, 0.945);' +
+        '  vec3 colPink = vec3(0.925, 0.286, 0.600);' +
+        '  vec3 col = mix(colPurple, colIndigo, bgUv.x * 0.6 + bgUv.y * 0.4);' +
+        '  float pinkBlend = sin(t * 0.6 + bgUv.x * 1.5) * 0.5 + 0.5;' +
+        '  col = mix(col, colPink, pinkBlend * 0.45);' +
+        '  col += vec3(val1 * 0.03, val2 * 0.015, val1 * 0.02);' +
+        '  col = clamp(col, 0.0, 1.0);' +
         '  vec2 uv = gl_FragCoord.xy / iResolution.y;' +
         '  uv -= vec2(0.5 * (iResolution.x / iResolution.y), 0.5);' +
-        '  const vec3 col1 = vec3(0.6, 0.45, 0.75);' +
-        '  const vec3 col2 = vec3(0.4, 0.6, 0.8);' +
+        '  const vec3 col1 = vec3(1.0, 0.95, 1.0);' +
+        '  const vec3 col2 = vec3(0.85, 0.85, 1.0);' +
         '  float aaDy = iResolution.y * 0.000005;' +
         '  for (float i = 0.; i < MAX_LINES; i += 1.) {' +
         '    if (i <= uLineCount) {' +
@@ -995,7 +1051,7 @@
         uYOffset: gl.getUniformLocation(program, 'uYOffset')
       };
 
-      var settings = { speed: 1.0, lineCount: 10, amplitude: 0.15, yOffset: 0.15 };
+      var settings = { speed: 1.0, lineCount: 10.0, amplitude: 0.15, yOffset: 0.15 };
       var startTime = Date.now();
 
       function resize() {
@@ -1033,6 +1089,86 @@
         gl.uniform1f(uniforms.uYOffset, settings.yOffset);
         gl.drawArrays(gl.TRIANGLES, 0, 6);
       }
+    })();
+
+    // AI assistant tile: animated particle network background
+    (function () {
+      var canvas = document.querySelector('.ai-particles');
+      if (!canvas) return;
+
+      var ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var particles = [];
+      var maxDist = 140;
+      var particleColor = 'rgba(99, 102, 241, 0.55)';
+      var lineColor = 'rgba(99, 102, 241,';
+
+      function resize() {
+        var w = canvas.clientWidth;
+        var h = canvas.clientHeight;
+        canvas.width = w * dpr;
+        canvas.height = h * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        var count = Math.max(14, Math.min(36, Math.round((w * h) / 9000)));
+        particles = [];
+        for (var i = 0; i < count; i++) {
+          particles.push({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            vx: (Math.random() - 0.5) * 0.35,
+            vy: (Math.random() - 0.5) * 0.35
+          });
+        }
+      }
+
+      function step() {
+        var w = canvas.clientWidth;
+        var h = canvas.clientHeight;
+        ctx.clearRect(0, 0, w, h);
+
+        for (var i = 0; i < particles.length; i++) {
+          var p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0 || p.x > w) p.vx *= -1;
+          if (p.y < 0 || p.y > h) p.vy *= -1;
+          p.x = Math.max(0, Math.min(w, p.x));
+          p.y = Math.max(0, Math.min(h, p.y));
+        }
+
+        for (var i = 0; i < particles.length; i++) {
+          for (var j = i + 1; j < particles.length; j++) {
+            var a = particles[i], b = particles[j];
+            var dx = a.x - b.x, dy = a.y - b.y;
+            var dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < maxDist) {
+              ctx.strokeStyle = lineColor + (1 - dist / maxDist) * 0.5 + ')';
+              ctx.lineWidth = 1;
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.stroke();
+            }
+          }
+        }
+
+        ctx.fillStyle = particleColor;
+        for (var i = 0; i < particles.length; i++) {
+          var p = particles[i];
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        if (!reduced) requestAnimationFrame(step);
+      }
+
+      resize();
+      step();
+      window.addEventListener('resize', resize);
     })();
 
     (function () {
@@ -1131,18 +1267,7 @@
       setTimeout(runCycle, 4200);
     })();
 
-    // Interactive mouse movement glow for washing bento tile
-    (function () {
-      var tile = document.querySelector('.tile-washing');
-      if (!tile) return;
-      tile.addEventListener('mousemove', function (e) {
-        var rect = tile.getBoundingClientRect();
-        var x = ((e.clientX - rect.left) / rect.width) * 100;
-        var y = ((e.clientY - rect.top) / rect.height) * 100;
-        tile.style.setProperty('--mouse-x', x + '%');
-        tile.style.setProperty('--mouse-y', y + '%');
-      });
-    })();
+
   </script>
 </body>
 </html>
