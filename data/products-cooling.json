@@ -1,0 +1,50 @@
+{
+  "category": "cooling",
+  "products": [
+    {
+      "id": "nwcn180w",
+      "model": "NWCN180W",
+      "photo": "assets/TF.png",
+      "price": 14999,
+      "currency": "UAH",
+      "capacityLiters": 253,
+      "noFrost": true,
+      "installType": "freestanding",
+      "energyClass": "E",
+      "noiseDb": 39,
+      "widthCm": 55,
+      "specs": ["No Frost", "H180", "W55", "D56", "253L", "E class"],
+      "retailers": []
+    },
+    {
+      "id": "nwcn200x",
+      "model": "NWCN200X",
+      "photo": "assets/TF.png",
+      "price": 18999,
+      "currency": "UAH",
+      "capacityLiters": 310,
+      "noFrost": true,
+      "installType": "freestanding",
+      "energyClass": "E",
+      "noiseDb": 36,
+      "widthCm": 60,
+      "specs": ["No Frost", "H200", "W60", "D65", "310L", "E class"],
+      "retailers": []
+    },
+    {
+      "id": "nwbi150",
+      "model": "NWBI150",
+      "photo": "assets/TF.png",
+      "price": 12999,
+      "currency": "UAH",
+      "capacityLiters": 210,
+      "noFrost": false,
+      "installType": "built-in",
+      "energyClass": "F",
+      "noiseDb": 40,
+      "widthCm": 55,
+      "specs": ["Built-in", "H150", "W55", "D54", "210L", "F class"],
+      "retailers": []
+    }
+  ]
+}

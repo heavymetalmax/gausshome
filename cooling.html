@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gausshome — Cooling</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      background: #f5f4f0;
+      font-family: 'Inter', sans-serif;
+      color: #1a1a1a;
+    }
+
+    /* ---- Header (copied from home.html) ---- */
+
+    .home-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      height: 70px;
+      padding: 0 48px;
+      background: #f5f4f0;
+      box-sizing: border-box;
+    }
+
+    .home-logo {
+      width: 96px;
+      height: auto;
+      justify-self: start;
+    }
+
+    .home-nav {
+      display: flex;
+      gap: 24px;
+      font-size: 13px;
+      color: rgba(26, 26, 26, 0.65);
+      justify-self: center;
+    }
+
+    .home-nav a {
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .home-nav a:hover {
+      color: #1a1a1a;
+    }
+
+    .home-globe {
+      position: relative;
+      justify-self: end;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      color: rgba(26, 26, 26, 0.65);
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .home-globe:hover {
+      color: #1a1a1a;
+    }
+
+    .home-globe svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .lang-menu {
+      display: none;
+      position: absolute;
+      top: 36px;
+      right: 0;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      min-width: 140px;
+      z-index: 200;
+      padding: 6px;
+      flex-direction: column;
+    }
+
+    .lang-menu.open {
+      display: flex;
+    }
+
+    .lang-menu-item {
+      padding: 8px 12px;
+      font-size: 13px;
+      color: #1a1a1a;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .lang-menu-item:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .home-hamburger {
+      display: none;
+      grid-column: 2;
+      justify-self: center;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      width: 32px;
+      height: 32px;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .home-hamburger span {
+      width: 20px;
+      height: 2px;
+      background: #1a1a1a;
+      border-radius: 1px;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+
+    .home-hamburger.open span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .home-hamburger.open span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .home-hamburger.open span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    .mobile-nav-panel {
+      display: none;
+      flex-direction: column;
+      position: fixed;
+      top: 70px;
+      left: 0;
+      right: 0;
+      z-index: 99;
+      background: #f5f4f0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .mobile-nav-panel.open {
+      display: flex;
+    }
+
+    .mobile-nav-panel a {
+      padding: 14px 20px;
+      font-size: 14px;
+      color: rgba(26, 26, 26, 0.75);
+      text-decoration: none;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .mobile-nav-panel a:last-child {
+      border-bottom: none;
+    }
+
+    .mobile-nav-panel a:hover {
+      color: #1a1a1a;
+    }
+
+    @media (max-width: 640px) {
+      .home-header {
+        padding: 0 12px;
+      }
+      .home-nav { display: none; }
+      .home-hamburger { display: flex; }
+    }
+
+    /* ---- Catalog shell ---- */
+
+    .catalog-shell {
+      padding: 32px 48px 64px;
+    }
+
+    .catalog-title-bar {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .catalog-title-bar h1 {
+      font-size: 28px;
+      font-weight: 300;
+      text-transform: lowercase;
+    }
+
+    .catalog-count {
+      font-size: 13px;
+      color: rgba(26, 26, 26, 0.5);
+    }
+
+    .catalog-layout {
+      display: grid;
+      grid-template-columns: minmax(320px, 400px) 1fr;
+      gap: 24px;
+    }
+
+    .catalog-chat-col {
+      position: sticky;
+      top: calc(70px + 24px);
+    }
+
+    @media (max-width: 980px) {
+      .catalog-shell {
+        padding: 24px 32px 48px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .catalog-shell {
+        padding: 16px 12px 32px;
+      }
+      .catalog-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ---- Mobile AI assistant: FAB + bottom sheet ---- */
+
+    .chat-fab {
+      display: none;
+      position: fixed;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      z-index: 250;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 18px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, #a855f7 0%, #6366f1 55%, #ec4899 100%);
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .chat-fab-avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .chat-sheet-overlay {
+      display: none;
+    }
+
+    .chat-sheet-handle {
+      display: none;
+    }
+
+    @media (max-width: 640px) {
+      .chat-fab {
+        display: flex;
+      }
+
+      .chat-fab.fab-hidden {
+        display: none;
+      }
+
+      .chat-sheet-overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 240;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+
+      .chat-sheet-overlay.open {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .catalog-chat-col {
+        display: block;
+        position: fixed;
+        top: auto;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 250;
+        max-height: 80vh;
+        overflow-y: auto;
+        background: #f5f4f0;
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.18);
+        padding: 0 16px calc(16px + env(safe-area-inset-bottom));
+        transform: translateY(100%);
+        transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+      }
+
+      .catalog-chat-col.open {
+        transform: translateY(0);
+      }
+
+      .chat-sheet-handle {
+        display: block;
+        width: 36px;
+        height: 4px;
+        border-radius: 2px;
+        background: rgba(0, 0, 0, 0.15);
+        margin: 10px auto 6px;
+        cursor: pointer;
+      }
+
+      .chat-card {
+        height: auto;
+      }
+    }
+
+    /* ---- Chat card (stub) ---- */
+
+    .chat-card {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .chat-card-header {
+      flex-shrink: 0;
+      background: linear-gradient(135deg, #a855f7 0%, #6366f1 55%, #ec4899 100%);
+      color: #fff;
+      padding: 18px 20px;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .chat-card-body {
+      flex: 1;
+      min-height: 0;
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* Reused from home.html for visual consistency with the AI tile */
+    .chat-bubble {
+      max-width: 95%;
+      padding: 8px 10px;
+      border-radius: 12px;
+      line-height: 1.35;
+      font-size: 13px;
+      backdrop-filter: blur(16px) saturate(160%);
+      -webkit-backdrop-filter: blur(16px) saturate(160%);
+      box-shadow: 0 1px 1px rgba(255, 255, 255, 0.5) inset, 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    .chat-bubble.ai {
+      background: rgba(168, 85, 247, 0.12);
+      border: 1px solid rgba(168, 85, 247, 0.18);
+      color: #1a1a1a;
+      border-top-left-radius: 4px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .chat-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      max-width: 100%;
+    }
+
+    .chat-avatar {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #a855f7;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .chat-card-note {
+      margin-top: auto;
+      font-size: 11px;
+      color: rgba(26, 26, 26, 0.4);
+      padding: 0 4px;
+    }
+
+    /* ---- Product grid (real) ---- */
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    /* .product-card.dimmed / .highlighted are reserved for the future
+       chat-driven filtering pass — not wired up yet. */
+    .product-card {
+      position: relative;
+      border-radius: 16px;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0, 0, 0, 0.12);
+    }
+
+    .product-card.dimmed {
+      opacity: 0.32;
+      filter: grayscale(40%);
+      transform: scale(0.97);
+      pointer-events: none;
+    }
+
+    .product-card.highlighted {
+      outline: 2px solid #a855f7;
+    }
+
+    .product-photo-frame {
+      min-height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.02);
+    }
+
+    .product-photo-frame img {
+      max-width: 65%;
+      max-height: 140px;
+      object-fit: contain;
+    }
+
+    .product-info {
+      padding: 14px 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .product-model {
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    .product-specs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .product-spec {
+      font-size: 11px;
+      color: rgba(26, 26, 26, 0.6);
+      background: rgba(0, 0, 0, 0.04);
+      border-radius: 6px;
+      padding: 2px 7px;
+    }
+
+    .product-price {
+      margin-top: 4px;
+      font-size: 16px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="home-header">
+    <a href="home.html"><img class="home-logo" src="assets/Logo.svg" alt="Gauss"></a>
+    <nav class="home-nav">
+      <a href="cooling.html" data-i18n="nav.cooling">Cooling</a>
+      <a href="home.html#washing" data-i18n="nav.washing">Washing</a>
+      <a href="home.html#cooking" data-i18n="nav.cooking">Cooking</a>
+      <a href="home.html#more" data-i18n="nav.more">More</a>
+    </nav>
+    <button class="home-hamburger" aria-label="Menu" data-i18n-attr="aria-label:a11y.menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="home-globe" aria-label="Language" data-i18n-attr="aria-label:a11y.language">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="12" cy="12" r="9"/>
+        <ellipse cx="12" cy="12" rx="4" ry="9"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+      </svg>
+    </div>
+  </div>
+  <nav class="mobile-nav-panel">
+    <a href="cooling.html" data-i18n="nav.cooling">Cooling</a>
+    <a href="home.html#washing" data-i18n="nav.washing">Washing</a>
+    <a href="home.html#cooking" data-i18n="nav.cooking">Cooking</a>
+    <a href="home.html#more" data-i18n="nav.more">More</a>
+  </nav>
+
+  <div class="catalog-shell">
+    <div class="catalog-title-bar">
+      <h1 data-i18n="catalog.title.cooling">cooling</h1>
+      <span class="catalog-count" id="catalogCount"></span>
+    </div>
+    <div class="catalog-layout">
+      <div class="catalog-chat-col" id="catalogChatCol">
+        <div class="chat-sheet-handle"></div>
+        <div class="chat-card">
+          <div class="chat-card-header" data-i18n="chat.header">Gausshome AI assistant</div>
+          <div class="chat-card-body">
+            <div class="chat-row">
+              <div class="chat-avatar">G</div>
+              <div class="chat-bubble ai" data-i18n="chat.greeting">Hi! I can help you pick the right fridge — chat coming soon.</div>
+            </div>
+            <div class="chat-card-note" data-i18n="chat.note">Interactive filtering chat is not wired up yet.</div>
+          </div>
+        </div>
+      </div>
+      <div class="catalog-grid-col">
+        <div class="product-grid" id="productGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-sheet-overlay" id="chatSheetOverlay"></div>
+  <button class="chat-fab" id="chatFab" aria-label="Open AI assistant" data-i18n-attr="aria-label:chat.fabLabel">
+    <span class="chat-fab-avatar">G</span>
+    <span data-i18n="chat.fabLabel">Ask AI assistant</span>
+  </button>
+
+  <script>
+    // Mobile hamburger nav toggle
+    (function () {
+      var hamburger = document.querySelector('.home-hamburger');
+      var panel = document.querySelector('.mobile-nav-panel');
+      if (!hamburger || !panel) return;
+
+      function closeMenu() {
+        panel.classList.remove('open');
+        hamburger.classList.remove('open');
+        hamburger.setAttribute('aria-expanded', 'false');
+      }
+
+      hamburger.addEventListener('click', function () {
+        var isOpen = panel.classList.toggle('open');
+        hamburger.classList.toggle('open', isOpen);
+        hamburger.setAttribute('aria-expanded', String(isOpen));
+      });
+
+      panel.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', closeMenu);
+      });
+    })();
+
+    // Mobile AI assistant: FAB opens the chat card as a bottom sheet
+    (function () {
+      var fab = document.getElementById('chatFab');
+      var sheet = document.getElementById('catalogChatCol');
+      var overlay = document.getElementById('chatSheetOverlay');
+      if (!fab || !sheet || !overlay) return;
+
+      function openSheet() {
+        sheet.classList.add('open');
+        overlay.classList.add('open');
+        fab.classList.add('fab-hidden');
+      }
+
+      function closeSheet() {
+        sheet.classList.remove('open');
+        overlay.classList.remove('open');
+        fab.classList.remove('fab-hidden');
+      }
+
+      var handle = sheet.querySelector('.chat-sheet-handle');
+
+      fab.addEventListener('click', openSheet);
+      overlay.addEventListener('click', closeSheet);
+      if (handle) handle.addEventListener('click', closeSheet);
+    })();
+
+    // Render the cooling product grid synchronously from data/products-cooling.json
+    (function () {
+      var grid = document.getElementById('productGrid');
+      var countEl = document.getElementById('catalogCount');
+      if (!grid) return;
+
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', 'data/products-cooling.json', false);
+      try {
+        xhr.send(null);
+      } catch (e) {
+        return;
+      }
+      if (xhr.status !== 200 && xhr.status !== 0) return;
+
+      var data = JSON.parse(xhr.responseText);
+      var products = data.products || [];
+
+      function renderCount(suffix) {
+        if (countEl) countEl.textContent = products.length + ' ' + suffix;
+      }
+      renderCount('products');
+      window.__ghUpdateCatalogCount = renderCount;
+
+      products.forEach(function (p) {
+        var card = document.createElement('div');
+        card.className = 'product-card';
+        card.dataset.id = p.id;
+
+        var photoFrame = document.createElement('div');
+        photoFrame.className = 'product-photo-frame';
+        var img = document.createElement('img');
+        img.src = p.photo;
+        img.alt = p.model;
+        photoFrame.appendChild(img);
+
+        var info = document.createElement('div');
+        info.className = 'product-info';
+
+        var model = document.createElement('div');
+        model.className = 'product-model';
+        model.textContent = p.model;
+
+        var specs = document.createElement('div');
+        specs.className = 'product-specs';
+        (p.specs || []).forEach(function (s) {
+          var spec = document.createElement('span');
+          spec.className = 'product-spec';
+          spec.textContent = s;
+          specs.appendChild(spec);
+        });
+
+        var price = document.createElement('div');
+        price.className = 'product-price';
+        price.textContent = p.price + ' ' + p.currency;
+
+        info.appendChild(model);
+        info.appendChild(specs);
+        info.appendChild(price);
+
+        card.appendChild(photoFrame);
+        card.appendChild(info);
+        grid.appendChild(card);
+      });
+    })();
+
+    // Desktop/tablet: stretch the AI assistant card to fill the full viewport height
+    (function () {
+      var col = document.getElementById('catalogChatCol');
+      if (!col) return;
+
+      function sync() {
+        if (window.innerWidth <= 640) {
+          col.style.minHeight = '';
+          return;
+        }
+        var top = col.getBoundingClientRect().top;
+        var available = window.innerHeight - top - 24;
+        col.style.minHeight = Math.max(available, 200) + 'px';
+      }
+
+      sync();
+      window.addEventListener('resize', sync);
+    })();
+
+    // i18n: language registry + dropdown + data-i18n swap
+    (function () {
+      var STORAGE_KEY = 'gh_lang';
+      var DEFAULT_LANG = 'en';
+      function getLang() { return localStorage.getItem(STORAGE_KEY) || DEFAULT_LANG; }
+
+      function applyDict(dict) {
+        document.querySelectorAll('[data-i18n]').forEach(function (el) {
+          var key = el.getAttribute('data-i18n');
+          if (dict[key] != null) el.textContent = dict[key];
+        });
+        document.querySelectorAll('[data-i18n-attr]').forEach(function (el) {
+          el.getAttribute('data-i18n-attr').split(';').forEach(function (pair) {
+            var parts = pair.split(':');
+            if (dict[parts[1]] != null) el.setAttribute(parts[0], dict[parts[1]]);
+          });
+        });
+        if (dict['catalog.productsSuffix'] != null && window.__ghUpdateCatalogCount) {
+          window.__ghUpdateCatalogCount(dict['catalog.productsSuffix']);
+        }
+      }
+
+      function setLang(code) {
+        localStorage.setItem(STORAGE_KEY, code);
+        document.documentElement.lang = code;
+        fetch('data/i18n/' + code + '.json').then(function (r) { return r.json(); }).then(applyDict);
+      }
+
+      document.documentElement.lang = getLang();
+      if (getLang() !== DEFAULT_LANG) setLang(getLang());
+
+      fetch('data/i18n/languages.json').then(function (r) { return r.json(); }).then(function (langs) {
+        var globe = document.querySelector('.home-globe');
+        if (!globe) return;
+        var menu = document.createElement('div');
+        menu.className = 'lang-menu';
+        langs.forEach(function (l) {
+          var item = document.createElement('div');
+          item.className = 'lang-menu-item';
+          item.textContent = l.label;
+          item.addEventListener('click', function (e) { e.stopPropagation(); setLang(l.code); menu.classList.remove('open'); });
+          menu.appendChild(item);
+        });
+        globe.appendChild(menu);
+        globe.addEventListener('click', function (e) { e.stopPropagation(); menu.classList.toggle('open'); });
+        document.addEventListener('click', function () { menu.classList.remove('open'); });
+      });
+    })();
+  </script>
+</body>
+</html>

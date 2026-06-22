@@ -1,0 +1,38 @@
+{
+  "meta.title.home": "Gausshome — 1st screen",
+  "meta.title.cooling": "Gausshome — Cooling",
+
+  "splash.subtitle": "home appliances",
+  "hero.tagline": "the science of smart choices",
+
+  "nav.cooling": "Cooling",
+  "nav.washing": "Washing",
+  "nav.cooking": "Cooking",
+  "nav.more": "More",
+
+  "tile.tag.category": "Категорія",
+  "tile.tag.ai": "AI",
+  "tile.label.cooling": "cooling",
+  "tile.label.washing": "washing",
+  "tile.label.ai": "ai assistant",
+  "tile.label.cooking": "cooking",
+  "tile.label.more": "more",
+  "tile.label.buy": "where to buy",
+  "tile.comingSoon": "Coming Soon",
+
+  "tile.btn.brand": "Brand",
+  "tile.btn.contacts": "Contacts",
+  "tile.btn.warranty": "Warranty",
+  "tile.btn.register": "Register your product",
+
+  "a11y.language": "Language",
+  "a11y.menu": "Menu",
+
+  "catalog.title.cooling": "cooling",
+  "catalog.productsSuffix": "products",
+
+  "chat.header": "Gausshome AI assistant",
+  "chat.greeting": "Hi! I can help you pick the right fridge — chat coming soon.",
+  "chat.note": "Interactive filtering chat is not wired up yet.",
+  "chat.fabLabel": "Запитати AI-консультанта"
+}

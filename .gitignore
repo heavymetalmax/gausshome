@@ -1,0 +1,6 @@
+.DS_Store
+.claude-flow/
+.agents/
+.claude/skills/
+skills-lock.json
+diff.txt

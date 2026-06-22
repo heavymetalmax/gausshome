@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="uk">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -305,7 +305,14 @@
       color: #1a1a1a;
     }
 
+    .home-nav a,
+    .mobile-nav-panel a {
+      text-decoration: none;
+      color: inherit;
+    }
+
     .home-globe {
+      position: relative;
       justify-self: end;
       display: flex;
       align-items: center;
@@ -324,6 +331,36 @@
     .home-globe svg {
       width: 20px;
       height: 20px;
+    }
+
+    .lang-menu {
+      display: none;
+      position: absolute;
+      top: 36px;
+      right: 0;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      min-width: 140px;
+      z-index: 200;
+      padding: 6px;
+      flex-direction: column;
+    }
+
+    .lang-menu.open {
+      display: flex;
+    }
+
+    .lang-menu-item {
+      padding: 8px 12px;
+      font-size: 13px;
+      color: #1a1a1a;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .lang-menu-item:hover {
+      background: rgba(0, 0, 0, 0.05);
     }
 
     .home-hamburger {
@@ -378,7 +415,9 @@
       display: flex;
     }
 
-    .mobile-nav-panel span {
+    .mobile-nav-panel span,
+    .mobile-nav-panel a {
+      display: block;
       padding: 14px 20px;
       font-size: 14px;
       color: rgba(26, 26, 26, 0.75);
@@ -386,11 +425,13 @@
       border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     }
 
-    .mobile-nav-panel span:last-child {
+    .mobile-nav-panel span:last-child,
+    .mobile-nav-panel a:last-child {
       border-bottom: none;
     }
 
-    .mobile-nav-panel span:hover {
+    .mobile-nav-panel span:hover,
+    .mobile-nav-panel a:hover {
       color: #1a1a1a;
     }
 
@@ -550,6 +591,7 @@
       justify-content: flex-end;
       padding: 0; /* remove default padding so stripe fits perfectly */
       color: #1a1a1a;
+      text-decoration: none;
       transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s ease;
     }
 
@@ -983,7 +1025,7 @@
   </div>
   <div class="logo-lockup">
     <img class="logo" src="assets/Logo.svg" alt="Gauss">
-    <div class="splash-subtitle">home appliances</div>
+    <div class="splash-subtitle" data-i18n="splash.subtitle">home appliances</div>
   </div>
 
   <div class="main-content">
@@ -996,7 +1038,7 @@
           </div>
           <div class="hero-content">
             <img class="hero-lockup-logo" src="assets/Logo.svg" alt="Gauss">
-            <div class="hero-tagline">the science of smart choices</div>
+            <div class="hero-tagline" data-i18n="hero.tagline">the science of smart choices</div>
           </div>
         </div>
       </div>
@@ -1005,15 +1047,15 @@
     <div class="home-header">
       <img class="home-logo" src="assets/Logo.svg" alt="Gauss">
       <nav class="home-nav">
-        <span data-category="Cooling">Cooling</span>
-        <span data-category="Washing">Washing</span>
-        <span data-category="Cooking">Cooking</span>
-        <span data-category="More">More</span>
+        <a href="cooling.html" data-i18n="nav.cooling">Cooling</a>
+        <span data-category="Washing" data-i18n="nav.washing">Washing</span>
+        <span data-category="Cooking" data-i18n="nav.cooking">Cooking</span>
+        <span data-category="More" data-i18n="nav.more">More</span>
       </nav>
-      <button class="home-hamburger" aria-label="Menu" aria-expanded="false">
+      <button class="home-hamburger" aria-label="Menu" data-i18n-attr="aria-label:a11y.menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
-      <div class="home-globe" aria-label="Language">
+      <div class="home-globe" aria-label="Language" data-i18n-attr="aria-label:a11y.language">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
           <circle cx="12" cy="12" r="9"/>
           <ellipse cx="12" cy="12" rx="4" ry="9"/>
@@ -1022,70 +1064,70 @@
       </div>
     </div>
     <nav class="mobile-nav-panel">
-      <span data-category="Cooling">Cooling</span>
-      <span data-category="Washing">Washing</span>
-      <span data-category="Cooking">Cooking</span>
-      <span data-category="More">More</span>
+      <a href="cooling.html" data-i18n="nav.cooling">Cooling</a>
+      <span data-category="Washing" data-i18n="nav.washing">Washing</span>
+      <span data-category="Cooking" data-i18n="nav.cooking">Cooking</span>
+      <span data-category="More" data-i18n="nav.more">More</span>
     </nav>
 
     <section class="section-grid">
       <div class="home-grid">
         <div class="bento">
-          <div class="tile tile-cooling" data-category="Cooling">
+          <a class="tile tile-cooling" href="cooling.html" data-category="Cooling">
             <div class="tile-bg-photo"><img src="assets/cooling-light.jpg?v=5" alt=""></div>
-            <div class="tile-tag">Категорія</div>
+            <div class="tile-tag" data-i18n="tile.tag.category">Category</div>
             <div class="tile-label">
-              cooling
+              <span data-i18n="tile.label.cooling">cooling</span>
               <span class="tile-arrow">→</span>
             </div>
-          </div>
+          </a>
           <div class="tile tile-washing" data-category="Washing">
             <div class="tile-bg-photo"><img src="assets/washing-light.jpg?v=5" alt=""></div>
-            <div class="tile-tag">Категорія</div>
+            <div class="tile-tag" data-i18n="tile.tag.category">Category</div>
             <div class="tile-label">
-              washing
+              <span data-i18n="tile.label.washing">washing</span>
               <span class="tile-arrow">→</span>
             </div>
           </div>
           <div class="tile tile-ai" data-category="AIssistance">
             <canvas class="ai-particles"></canvas>
             <div class="ai-chat-demo"></div>
-            <div class="tile-tag">AI</div>
+            <div class="tile-tag" data-i18n="tile.tag.ai">AI</div>
             <div class="tile-label">
-              ai assistant
+              <span data-i18n="tile.label.ai">ai assistant</span>
               <span class="tile-arrow">→</span>
             </div>
           </div>
           <div class="tile tile-cooking" data-category="Cooking">
             <div class="tile-bg-photo"><img src="assets/cooking-light.jpg?v=5" alt=""></div>
-            <div class="tile-coming-soon">Coming Soon</div>
-            <div class="tile-tag">Категорія</div>
+            <div class="tile-coming-soon" data-i18n="tile.comingSoon">Coming Soon</div>
+            <div class="tile-tag" data-i18n="tile.tag.category">Category</div>
             <div class="tile-label">
-              cooking
+              <span data-i18n="tile.label.cooking">cooking</span>
               <span class="tile-arrow">→</span>
             </div>
           </div>
           <div class="tile tile-more" data-category="More">
             <div class="tile-bg-photo"><img src="assets/more-light.jpg?v=6" alt=""></div>
-            <div class="tile-coming-soon">Coming Soon</div>
-            <div class="tile-tag">Категорія</div>
+            <div class="tile-coming-soon" data-i18n="tile.comingSoon">Coming Soon</div>
+            <div class="tile-tag" data-i18n="tile.tag.category">Category</div>
             <div class="tile-label">
-              more
+              <span data-i18n="tile.label.more">more</span>
               <span class="tile-arrow">→</span>
             </div>
           </div>
           <div class="tile tile-support" data-category="Support">
             <div class="tile-buttons">
-              <span class="tile-btn" data-category="Brand">Brand</span>
-              <span class="tile-btn" data-category="Contacts">Contacts</span>
-              <span class="tile-btn" data-category="Warranty">Warranty</span>
-              <span class="tile-btn" data-category="Register">Register your product</span>
+              <span class="tile-btn" data-category="Brand" data-i18n="tile.btn.brand">Brand</span>
+              <span class="tile-btn" data-category="Contacts" data-i18n="tile.btn.contacts">Contacts</span>
+              <span class="tile-btn" data-category="Warranty" data-i18n="tile.btn.warranty">Warranty</span>
+              <span class="tile-btn" data-category="Register" data-i18n="tile.btn.register">Register your product</span>
             </div>
           </div>
           <div class="tile tile-buy" data-category="WhereToBuy">
-            <div class="tile-tag">Категорія</div>
+            <div class="tile-tag" data-i18n="tile.tag.category">Category</div>
             <div class="tile-label">
-              where to buy
+              <span data-i18n="tile.label.buy">where to buy</span>
               <span class="tile-arrow">→</span>
             </div>
           </div>
@@ -1126,7 +1168,7 @@
         hamburger.setAttribute('aria-expanded', String(isOpen));
       });
 
-      panel.querySelectorAll('span').forEach(function (link) {
+      panel.querySelectorAll('span, a').forEach(function (link) {
         link.addEventListener('click', closeMenu);
       });
     })();
@@ -1472,7 +1514,51 @@
       setTimeout(runCycle, 4200);
     })();
 
+    // i18n: language registry + dropdown + data-i18n swap
+    (function () {
+      var STORAGE_KEY = 'gh_lang';
+      var DEFAULT_LANG = 'en';
+      function getLang() { return localStorage.getItem(STORAGE_KEY) || DEFAULT_LANG; }
 
+      function applyDict(dict) {
+        document.querySelectorAll('[data-i18n]').forEach(function (el) {
+          var key = el.getAttribute('data-i18n');
+          if (dict[key] != null) el.textContent = dict[key];
+        });
+        document.querySelectorAll('[data-i18n-attr]').forEach(function (el) {
+          el.getAttribute('data-i18n-attr').split(';').forEach(function (pair) {
+            var parts = pair.split(':');
+            if (dict[parts[1]] != null) el.setAttribute(parts[0], dict[parts[1]]);
+          });
+        });
+      }
+
+      function setLang(code) {
+        localStorage.setItem(STORAGE_KEY, code);
+        document.documentElement.lang = code;
+        fetch('data/i18n/' + code + '.json').then(function (r) { return r.json(); }).then(applyDict);
+      }
+
+      document.documentElement.lang = getLang();
+      if (getLang() !== DEFAULT_LANG) setLang(getLang());
+
+      fetch('data/i18n/languages.json').then(function (r) { return r.json(); }).then(function (langs) {
+        var globe = document.querySelector('.home-globe');
+        if (!globe) return;
+        var menu = document.createElement('div');
+        menu.className = 'lang-menu';
+        langs.forEach(function (l) {
+          var item = document.createElement('div');
+          item.className = 'lang-menu-item';
+          item.textContent = l.label;
+          item.addEventListener('click', function (e) { e.stopPropagation(); setLang(l.code); menu.classList.remove('open'); });
+          menu.appendChild(item);
+        });
+        globe.appendChild(menu);
+        globe.addEventListener('click', function (e) { e.stopPropagation(); menu.classList.toggle('open'); });
+        document.addEventListener('click', function () { menu.classList.remove('open'); });
+      });
+    })();
   </script>
 </body>
 </html>
